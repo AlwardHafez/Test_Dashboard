@@ -1,0 +1,304 @@
+{
+  "bookings": [
+    {
+      "id": "CPB_1727702400000_a1b2c3d4e",
+      "customerName": "John Smith",
+      "phone": "+1-555-0123",
+      "email": "john.smith@email.com",
+      "services": ["interior_detailing", "exterior_polish"],
+      "date": "2025/10/01",
+      "time": "09:00",
+      "carDetails": "Toyota Camry 2020",
+      "notes": "Please focus on the interior detailing",
+      "bookedAt": "2024-09-30T14:30:00.000Z",
+      "status": "confirmed"
+    },
+    {
+      "id": "CPB_1727788800000_f5g6h7i8j",
+      "customerName": "Sarah Johnson",
+      "phone": "+1-555-0456",
+      "email": "sarah.j@email.com",
+      "services": ["interior_detailing", "exterior_detailing", "engine_bay_cleaning", "undercarriage_cleaning"],
+      "date": "2025/10/02",
+      "time": "13:00",
+      "carDetails": "BMW 3 Series 2022",
+      "notes": "Full comprehensive detailing package",
+      "bookedAt": "2024-09-30T15:45:00.000Z",
+      "status": "confirmed"
+    },
+    {
+      "id": "CPB_1727875200000_k9l0m1n2o",
+      "customerName": "Michael Chen",
+      "phone": "+1-555-0789",
+      "email": "m.chen@email.com",
+      "services": ["engine_bay_cleaning", "basic_wash"],
+      "date": "2025/10/03",
+      "time": "11:00",
+      "carDetails": "Honda Accord 2019",
+      "notes": "Engine bay dry ice cleaning needed, also basic exterior wash",
+      "bookedAt": "2024-09-30T16:20:00.000Z",
+      "status": "confirmed"
+    },
+    {
+      "id": "CPB_1727961600000_p3q4r5s6t",
+      "customerName": "Emily Rodriguez",
+      "phone": "+1-555-0321",
+      "email": "emily.r@email.com",
+      "services": ["basic_wash"],
+      "date": "2025/10/04",
+      "time": "09:00",
+      "carDetails": "Ford F-150 2021",
+      "notes": "Quick wash before road trip",
+      "bookedAt": "2024-10-01T09:15:00.000Z",
+      "status": "confirmed"
+    },
+    {
+      "id": "CPB_1728048000000_u7v8w9x0y",
+      "customerName": "David Park",
+      "phone": "+1-555-0654",
+      "email": "david.park@email.com",
+      "services": ["interior_detailing", "exterior_polish", "wheel_treatment"],
+      "date": "2025/10/05",
+      "time": "13:00",
+      "carDetails": "Mercedes-Benz C-Class 2023",
+      "notes": "Interior detail plus exterior polish with special attention to rims",
+      "bookedAt": "2024-10-01T10:30:00.000Z",
+      "status": "confirmed"
+    },
+    {
+      "id": "CPB_1728134400000_z1a2b3c4d",
+      "customerName": "Lisa Thompson",
+      "phone": "+1-555-0987",
+      "email": "lisa.t@email.com",
+      "services": ["interior_detailing", "exterior_detailing", "ceramic_coating"],
+      "date": "2025/09/15",
+      "time": "09:00",
+      "carDetails": "Tesla Model 3 2022",
+      "notes": "Complete detail with ceramic coating",
+      "bookedAt": "2024-10-01T11:45:00.000Z",
+      "status": "confirmed"
+    },
+    {
+      "id": "CPB_1728220800000_e5f6g7h8i",
+      "customerName": "Robert Williams",
+      "phone": "+1-555-0147",
+      "email": "rob.williams@email.com",
+      "services": ["exterior_polish", "undercarriage_cleaning"],
+      "date": "2025/09/16",
+      "time": "15:00",
+      "carDetails": "Jeep Wrangler 2020",
+      "notes": "Off-road vehicle needs undercarriage attention",
+      "bookedAt": "2024-10-01T13:20:00.000Z",
+      "status": "confirmed"
+    },
+    {
+      "id": "CPB_1728307200000_j9k0l1m2n",
+      "customerName": "Amanda Martinez",
+      "phone": "+1-555-0258",
+      "email": "amanda.m@email.com",
+      "services": ["basic_wash", "exterior_polish", "headlight_restoration"],
+      "date": "2025/09/18",
+      "time": "11:00",
+      "carDetails": "Volkswagen Jetta 2018",
+      "notes": "Basic wash with polish and headlight restoration",
+      "bookedAt": "2024-10-02T08:30:00.000Z",
+      "status": "confirmed"
+    },    {
+      "id": "CPB_1728307200000_j9k0l1m2n",
+      "customerName": "Amanda Martinez",
+      "phone": "+1-555-0258",
+      "email": "amanda.m@email.com",
+      "services": ["basic_wash", "exterior_polish", "headlight_restoration"],
+      "date": "2025/09/17",
+      "time": "11:00",
+      "carDetails": "Volkswagen Jetta 2018",
+      "notes": "Basic wash with polish and headlight restoration",
+      "bookedAt": "2024-10-02T08:30:00.000Z",
+      "status": "confirmed"
+    },
+    {
+      "id": "CPB_1728393600000_o3p4q5r6s",
+      "customerName": "James Anderson",
+      "phone": "+1-555-0369",
+      "email": "j.anderson@email.com",
+      "services": ["interior_detailing", "exterior_detailing", "engine_bay_cleaning"],
+      "date": "2025/09/19",
+      "time": "09:00",
+      "carDetails": "Audi A4 2021",
+      "notes": "Full detail including engine bay dry ice cleaning",
+      "bookedAt": "2024-10-02T14:15:00.000Z",
+      "status": "confirmed"
+    },
+    {
+      "id": "CPB_1728480000000_t7u8v9w0x",
+      "customerName": "Jennifer Lee",
+      "phone": "+1-555-0741",
+      "email": "jennifer.lee@email.com",
+      "services": ["interior_detailing", "exterior_detailing", "engine_bay_cleaning", "ceramic_coating", "wheel_treatment"],
+      "date": "2025/10/06",
+      "time": "13:00",
+      "carDetails": "Porsche 911 2023",
+      "notes": "Premium complete package for luxury vehicle",
+      "bookedAt": "2024-10-02T15:40:00.000Z",
+      "status": "confirmed"
+    },
+    {
+      "id": "CPB_1728566400000_y1z2a3b4c",
+      "customerName": "Christopher Brown",
+      "phone": "+1-555-0852",
+      "email": "chris.brown@email.com",
+      "services": ["exterior_polish", "interior_detailing", "pet_hair_removal"],
+      "date": "2025/10/07",
+      "time": "11:00",
+      "carDetails": "Chevrolet Silverado 2022",
+      "notes": "Standard polish plus premium interior with pet hair removal",
+      "bookedAt": "2024-10-03T09:20:00.000Z",
+      "status": "pending"
+    },
+    {
+      "id": "CPB_1728652800000_d5e6f7g8h",
+      "customerName": "Maria Garcia",
+      "phone": "+1-555-0963",
+      "email": "maria.g@email.com",
+      "services": ["basic_wash", "interior_vacuum"],
+      "date": "2025/09/20",
+      "time": "09:00",
+      "carDetails": "Mazda CX-5 2019",
+      "notes": "Regular maintenance wash with interior vacuum",
+      "bookedAt": "2024-10-03T10:55:00.000Z",
+      "status": "confirmed"
+    },
+    {
+      "id": "CPB_1728739200000_i9j0k1l2m",
+      "customerName": "Kevin Nguyen",
+      "phone": "+1-555-0159",
+      "email": "kevin.n@email.com",
+      "services": ["interior_detailing", "pet_hair_removal", "odor_removal"],
+      "date": "2025/09/21",
+      "time": "15:00",
+      "carDetails": "Subaru Outback 2021",
+      "notes": "Pet hair and odor removal needed",
+      "bookedAt": "2024-10-03T12:30:00.000Z",
+      "status": "confirmed"
+    },
+    {
+      "id": "CPB_1728825600000_n3o4p5q6r",
+      "customerName": "Rachel Kim",
+      "phone": "+1-555-0753",
+      "email": "rachel.kim@email.com",
+      "services": ["interior_detailing", "exterior_detailing", "engine_bay_cleaning", "undercarriage_cleaning", "ceramic_coating", "wheel_treatment", "headlight_restoration"],
+      "date": "2025/09/22",
+      "time": "09:00",
+      "carDetails": "Range Rover Sport 2024",
+      "notes": "Complete restoration package - all services for show car preparation",
+      "bookedAt": "2024-10-04T08:45:00.000Z",
+      "status": "confirmed"
+    },
+    {
+      "id": "CPB_1728912000000_s7t8u9v0w",
+      "customerName": "Thomas Wright",
+      "phone": "+1-555-0864",
+      "email": "thomas.w@email.com",
+      "services": ["exterior_detailing", "scratch_repair"],
+      "date": "2025/10/08",
+      "time": "13:00",
+      "carDetails": "Nissan Altima 2020",
+      "notes": "Exterior detail with scratch repair",
+      "bookedAt": "2024-10-04T11:20:00.000Z",
+      "status": "confirmed"
+    }
+  ],
+  "settings": {
+    "maxAppointmentsPerDay": 2,
+    "availableTimeSlots": [
+      "09:00",
+      "11:00",
+      "13:00",
+      "15:00"
+    ],
+    "serviceTypes": {
+      "basic_wash": {
+        "name": "Basic Wash",
+        "description": "Exterior hand wash and dry",
+        "price": 25,
+        "duration": 30
+      },
+      "interior_vacuum": {
+        "name": "Interior Vacuum",
+        "description": "Thorough vacuum of interior",
+        "price": 20,
+        "duration": 30
+      },
+      "interior_detailing": {
+        "name": "Interior Detailing",
+        "description": "Deep clean, vacuum, leather treatment, dashboard polish",
+        "price": 100,
+        "duration": 120
+      },
+      "exterior_polish": {
+        "name": "Exterior Polish",
+        "description": "Hand polish and wax",
+        "price": 75,
+        "duration": 90
+      },
+      "exterior_detailing": {
+        "name": "Exterior Detailing",
+        "description": "Complete exterior detail with clay bar and wax",
+        "price": 150,
+        "duration": 150
+      },
+      "engine_bay_cleaning": {
+        "name": "Engine Bay Cleaning",
+        "description": "Dry ice blasting engine bay cleaning",
+        "price": 120,
+        "duration": 90
+      },
+      "undercarriage_cleaning": {
+        "name": "Undercarriage Cleaning",
+        "description": "Dry ice cleaning of undercarriage",
+        "price": 100,
+        "duration": 60
+      },
+      "ceramic_coating": {
+        "name": "Ceramic Coating",
+        "description": "Professional ceramic coating application",
+        "price": 500,
+        "duration": 240
+      },
+      "wheel_treatment": {
+        "name": "Wheel & Tire Treatment",
+        "description": "Deep clean wheels, tire shine, brake dust removal",
+        "price": 60,
+        "duration": 45
+      },
+      "headlight_restoration": {
+        "name": "Headlight Restoration",
+        "description": "Restore cloudy/yellowed headlights",
+        "price": 80,
+        "duration": 60
+      },
+      "pet_hair_removal": {
+        "name": "Pet Hair Removal",
+        "description": "Specialized pet hair removal from interior",
+        "price": 50,
+        "duration": 45
+      },
+      "odor_removal": {
+        "name": "Odor Removal",
+        "description": "Ozone treatment for odor elimination",
+        "price": 70,
+        "duration": 60
+      },
+      "scratch_repair": {
+        "name": "Minor Scratch Repair",
+        "description": "Paint correction for minor scratches",
+        "price": 90,
+        "duration": 90
+      }
+    },
+    "allowMultipleServices": true,
+    "multipleServicesDiscount": 10,
+    "discountThreshold": 3
+  },
+  "lastUpdated": "2024-10-04T11:20:00.000Z"
+}
