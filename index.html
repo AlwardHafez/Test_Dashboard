@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Venus Dashboard V0.1</title>
+    <title>Venus Dashboard V0.9beta</title>
     
     <!-- Chart.js for visualization -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
@@ -70,12 +70,18 @@
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             background: var(--bg-primary);
             color: var(--text-primary);
             line-height: 1.6;
             transition: background var(--transition-normal), color var(--transition-normal);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         /* Header */
@@ -103,18 +109,27 @@
         /* Mobile Menu Button */
         .mobile-menu-btn {
             display: none;
-            background: transparent;
-            border: none;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
             color: var(--text-primary);
             font-size: 1.5rem;
             cursor: pointer;
             padding: var(--spacing-xs);
             border-radius: var(--radius-md);
-            transition: background var(--transition-fast);
+            transition: all var(--transition-fast);
+            min-width: 44px;
+            min-height: 44px;
+            align-items: center;
+            justify-content: center;
         }
 
         .mobile-menu-btn:hover {
             background: var(--bg-tertiary);
+            border-color: var(--accent-primary);
+        }
+        
+        .mobile-menu-btn:active {
+            transform: scale(0.95);
         }
 
         /* Mobile Navigation */
@@ -133,6 +148,18 @@
 
         .mobile-nav.active {
             display: block;
+            animation: slideDown 0.3s ease-in-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .mobile-nav .header-actions {
@@ -145,7 +172,62 @@
             justify-content: center;
             padding: var(--spacing-sm);
             font-size: 1rem;
-            min-height: 44px;
+            min-height: 48px;
+            width: 100%;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+        
+        .mobile-nav .btn-icon {
+            justify-content: flex-start;
+        }
+        
+        .mobile-nav .lock-btn {
+            font-size: 1rem;
+        }
+        
+        .mobile-nav .lock-btn span:first-child {
+            font-size: 1.2rem;
+        }
+
+        .mobile-nav-section {
+            margin-bottom: var(--spacing-md);
+            padding-bottom: var(--spacing-md);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .mobile-nav-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .mobile-nav-title {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: var(--spacing-sm);
+            font-weight: 600;
+        }
+
+        .mobile-view-modes {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-xs);
+        }
+
+        .mobile-filters {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+
+        .mobile-filters .filter-input {
+            width: 100%;
         }
 
         .logo-section {
@@ -226,6 +308,86 @@
 
         .btn-icon:hover {
             background: var(--bg-tertiary);
+        }
+
+        .lock-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .lock-btn:hover {
+            background: var(--bg-tertiary);
+            transform: scale(1.05);
+        }
+
+        .lock-btn.locked {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .lock-btn.unlocked {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .lock-btn.unlocked:hover {
+            background: var(--success-hover);
+        }
+
+        /* Restricted Mode overlay styles */
+        .restricted-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-secondary);
+            z-index: 10;
+            border-top: 1px solid var(--border-color);
+        }
+        .restricted-overlay-inner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--spacing-sm);
+            text-align: center;
+            padding: var(--spacing-md);
+            border-radius: var(--radius-md);
+        }
+        .restricted-overlay-icon {
+            font-size: 2rem;
+            opacity: 0.7;
+            color: var(--text-secondary);
+        }
+        .restricted-overlay-text {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        .restricted-widget {
+            position: relative;
+        }
+        .restricted-widget::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: transparent;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .restricted-hidden {
+            color: var(--text-secondary) !important;
+            font-style: italic;
+            filter: blur(1px);
+            user-select: none;
+            transition: all 0.3s ease;
         }
 
         /* Auto-save indicator */
@@ -431,6 +593,7 @@
             display: flex;
             align-items: center;
             gap: var(--spacing-xs);
+            transition: all var(--transition-fast);
         }
 
         .kpi-trend.positive {
@@ -440,6 +603,7 @@
         .kpi-trend.negative {
             color: var(--accent-danger);
         }
+
 
         /* Dashboard Grid */
         .dashboard-grid {
@@ -598,6 +762,8 @@
             justify-content: center;
             font-size: 1.5rem;
             transition: all var(--transition-normal);
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .mobile-add-button:hover {
@@ -608,9 +774,13 @@
         .mobile-add-button:active {
             transform: scale(0.95);
         }
-
         /* Mobile Styles */
         @media (max-width: 768px) {
+            /* Mobile Menu Button */
+            .mobile-menu-btn {
+                display: flex;
+            }
+            
             /* Mobile Floating Add Button */
             .mobile-add-button {
                 display: flex;
@@ -630,9 +800,23 @@
                 grid-column: span 12;
             }
             
+            .widget {
+                margin-bottom: var(--spacing-sm);
+            }
+            
+            .widget-body {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            
             .kpi-grid {
                 grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
                 gap: var(--spacing-sm);
+            }
+            
+            .kpi-card {
+                padding: var(--spacing-sm);
+                touch-action: manipulation;
             }
             
             .main-container {
@@ -676,13 +860,37 @@
                 padding: var(--spacing-sm);
             }
             
-            /* Toolbar */
+            .btn-icon {
+                min-width: 44px;
+                min-height: 44px;
+                padding: var(--spacing-xs);
+            }
+            
+            /* Widget Headers - Remove cursor:move on mobile since dragging is disabled */
+            .widget-header {
+                cursor: default !important;
+                -webkit-tap-highlight-color: transparent;
+            }
+            
+            .widget {
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            /* Prevent text selection during scrolling on mobile */
+            .widget-header, .widget-title {
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+            }
+            
+            /* Toolbar - Hide on mobile since we have mobile menu */
             .toolbar {
-                top: 70px; /* Adjust for mobile header height */
+                display: none;
             }
             
             .toolbar-toggle {
-                top: 80px; /* Adjust for mobile header height */
+                display: none;
             }
             
             .toolbar-container {
@@ -737,8 +945,21 @@
                 font-size: 1rem;
             }
             
+            .header-container {
+                padding: var(--spacing-xs) var(--spacing-sm);
+            }
+            
+            .mobile-menu-btn {
+                font-size: 1.3rem;
+            }
+            
             .kpi-grid {
                 grid-template-columns: repeat(2, 1fr);
+                gap: var(--spacing-xs);
+            }
+            
+            .kpi-card {
+                padding: var(--spacing-xs);
             }
             
             .kpi-value {
@@ -755,6 +976,14 @@
             
             .widget {
                 padding: var(--spacing-sm);
+            }
+            
+            .widget-title {
+                font-size: 1rem;
+            }
+            
+            .modal-title {
+                font-size: 1.2rem;
             }
             
             .widget-header {
@@ -1407,7 +1636,6 @@
             background: #ff3b30;
             color: white;
         }
-
         .btn-danger:hover {
             background: #d70015;
         }
@@ -1893,6 +2121,33 @@
             to { transform: rotate(360deg); }
         }
 
+        /* Ensure refresh button itself does not rotate */
+        .widget.refreshing .widget-actions .widget-btn {
+            animation: none !important;
+        }
+
+        /* Widget refresh animation: show a spinner centered over the chart area */
+        .widget.refreshing .chart-container::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 36px;
+            height: 36px;
+            margin-left: -18px;
+            margin-top: -18px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--accent-primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .widget.refreshing .chart-container {
+            opacity: 0.9;
+        }
+
         /* Toast Notifications */
         .toast {
             position: fixed;
@@ -2055,7 +2310,7 @@
     <header class="header">
         <div class="header-container">
             <div class="logo-section">
-                <div class="logo">🌍 Venus DASH V0.4</div>
+                <div class="logo">🌍 Venus DASH V0.9beta</div>
             </div>
             
             <!-- Mobile Menu Button -->
@@ -2065,6 +2320,9 @@
             
             <!-- Desktop Actions -->
             <div class="header-actions">
+                <button class="btn btn-icon lock-btn" id="lockBtn" title="Toggle Restricted Mode" onclick="toggleRestrictedMode()">
+                    <span id="lockIcon">🔒</span>
+                </button>
                 <button class="btn btn-primary" id="exportBtn">
                     <span>📄</span> Export
                 </button>
@@ -2081,18 +2339,66 @@
             
             <!-- Mobile Navigation -->
             <div class="mobile-nav" id="mobileNav">
-                <div class="header-actions">
-                    <button class="btn btn-primary" id="exportBtnMobile">
-                        <span>📄</span> Export
-                    </button>
-                    <button class="btn btn-secondary" onclick="manualSave()" title="Manual Save">
-                        <span>💾</span> Save Now
-                    </button>
-                    <button class="btn btn-icon" id="themeToggleMobile" title="Toggle Theme">
-                        <span id="themeIconMobile">🌙</span>
-                    </button>
-                    <div class="auto-save-indicator" id="autoSaveIndicatorMobile" title="Auto-save status" onclick="testSave()">
-                        <span id="autoSaveIconMobile">💾</span>
+                <!-- Actions Section -->
+                <div class="mobile-nav-section">
+                    <h4 class="mobile-nav-title">Actions</h4>
+                    <div class="header-actions">
+                        <button class="btn btn-icon lock-btn" id="lockBtnMobile" title="Toggle Restricted Mode" onclick="toggleRestrictedMode()">
+                            <span id="lockIconMobile">🔒</span>
+                            <span>Restricted Mode</span>
+                        </button>
+                        <button class="btn btn-primary" id="exportBtnMobile">
+                            <span>📄</span> Export
+                        </button>
+                        <button class="btn btn-secondary" onclick="manualSave()" title="Manual Save">
+                            <span>💾</span> Save Now
+                        </button>
+                        <button class="btn btn-icon" id="themeToggleMobile" title="Toggle Theme">
+                            <span id="themeIconMobile">🌙</span>
+                            <span>Theme</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Views Section -->
+                <div class="mobile-nav-section">
+                    <h4 class="mobile-nav-title">Views</h4>
+                    <div class="mobile-view-modes" id="mobileViewModes">
+                        <button class="view-mode-btn active" data-view="full" onclick="closeMobileMenu()">Full View</button>
+                        <button class="view-mode-btn" data-view="custom" id="customBtnMobile" onclick="closeMobileMenu()">Custom</button>
+                    </div>
+                </div>
+
+                <!-- Filters Section -->
+                <div class="mobile-nav-section">
+                    <h4 class="mobile-nav-title">Filters</h4>
+                    <div class="mobile-filters">
+                        <select id="timePeriodFilterMobile" class="filter-input">
+                            <option value="">All Time</option>
+                            <option value="thisWeek">This Week</option>
+                            <option value="thisMonth">This Month</option>
+                            <option value="lastMonth">Last Month</option>
+                            <option value="jan2025">Jan 2025</option>
+                            <option value="feb2025">Feb 2025</option>
+                            <option value="mar2025">Mar 2025</option>
+                            <option value="apr2025">Apr 2025</option>
+                            <option value="may2025">May 2025</option>
+                            <option value="jun2025">Jun 2025</option>
+                            <option value="jul2025">Jul 2025</option>
+                            <option value="aug2025">Aug 2025</option>
+                            <option value="sep2025">Sep 2025</option>
+                            <option value="oct2025">Oct 2025</option>
+                            <option value="nov2025">Nov 2025</option>
+                            <option value="dec2025">Dec 2025</option>
+                        </select>
+                        <select id="statusFilterMobile" class="filter-input">
+                            <option value="">All Status</option>
+                            <option value="confirmed">Confirmed</option>
+                            <option value="pending">Pending</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                        <button class="btn btn-secondary" id="applyFiltersMobile">Apply Filters</button>
+                        <button class="btn btn-secondary" id="resetFiltersMobile">Reset</button>
                     </div>
                 </div>
             </div>
@@ -2299,7 +2605,7 @@
                     <span>📊</span>
                     <div>
                         <strong>Revenue Chart</strong>
-                        <div style="font-size: 0.85rem; color: var(--text-secondary);">Time-series revenue analysis</div>
+                        <div style="font-size: 0.85rem; color: var(--text-secondary);">Time-series revenue analysis with expand/collapse</div>
                     </div>
                 </div>
                 <div class="export-option" onclick="addWidget('service-distribution')">
@@ -2337,13 +2643,37 @@
             <div class="modal-body">
                 <div class="form-group">
                     <label for="layoutName">Layout Name:</label>
-                    <input type="text" id="layoutName" class="form-input" placeholder="Enter layout name..." maxlength="20">
+                    <input type="text" id="layoutName" class="form-input" placeholder="Enter layout name..." maxlength="20" onkeypress="handleLayoutNameKeypress(event)">
                     <div class="form-help">Choose a unique name for your custom dashboard layout</div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" onclick="closeModal('customLayoutModal')">Cancel</button>
                 <button class="btn btn-primary" onclick="createCustomLayout()">Create Layout</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Access Password Modal -->
+    <div class="modal" id="dataAccessModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">🔓 Enter Restricted Mode Password</h2>
+                <button class="close-btn" onclick="closeModal('dataAccessModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="dataAccessPassword">Password:</label>
+                    <input type="password" id="dataAccessPassword" class="form-input" placeholder="Enter password to unlock sensitive data..." autofocus>
+                    <div class="form-help">Enter the correct password to view sensitive business data</div>
+                    <div id="passwordError" class="error-message" style="display: none; color: var(--danger-color); margin-top: var(--spacing-xs);">
+                        Incorrect password. Please try again.
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('dataAccessModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="verifyRestrictedModePassword()">Unlock Data</button>
             </div>
         </div>
     </div>
@@ -2422,13 +2752,58 @@
             </div>
         </div>
     </div>
-
     <script>
         // Global state
         let dashboardData = null;
         let filteredData = null;
         let currentTheme = 'light';
         let currentView = 'full';
+        
+        // Chart.js instances - store references to properly destroy/update charts
+        let revenueChartInstance = null;
+        let servicesChartInstance = null;
+        let timelineChartInstance = null;
+        
+        // Restricted Mode system state
+        let restrictedMode = true; // Default to restricted state
+        const DATA_ACCESS_PASSWORD = '111'; // Hardcoded password (change later)
+        
+        // Global restricted mode event listeners
+        const restrictedModeListeners = [];
+        
+        // Function to notify all listeners of restricted mode changes
+        function notifyRestrictedModeChange(isRestricted) {
+            restrictedModeListeners.forEach(listener => {
+                try {
+                    listener(isRestricted);
+                } catch (error) {
+                    console.error('Error in restricted mode listener:', error);
+                }
+            });
+        }
+        
+        // Function to register a listener for restricted mode changes
+        function addRestrictedModeListener(callback) {
+            restrictedModeListeners.push(callback);
+        }
+        
+        // Sensitive data configuration - easily modifiable
+        const SENSITIVE_CONFIG = {
+            widgets: {
+                // Widgets to completely hide with lock overlay
+            completelyHidden: ['widget-revenue'],
+                // Widgets to partially hide (keep title, hide content)
+                partiallyHidden: ['widget-stats']
+            },
+            kpiFields: {
+                // KPI cards to hide values
+                hideValues: ['total-revenue', 'total-bookings', 'avg-booking-value', 'popular-service']
+            },
+            bookingFields: {
+                // Fields to hide in booking tables
+                hideFields: ['email', 'payment', 'phone']
+            }
+        };
         let widgets = [];
         let autoSaveEnabled = true;
         let autoSaveInterval = null;
@@ -2456,11 +2831,19 @@
             localStorage.setItem('customLayouts', JSON.stringify(customLayouts));
         }
 
+        function handleLayoutNameKeypress(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Prevent default form submission
+                createCustomLayout();
+            }
+        }
+        
         function createCustomLayout() {
             const layoutName = document.getElementById('layoutName').value.trim();
             
             if (!layoutName) {
                 showToast('Please enter a layout name', 'error');
+                document.getElementById('layoutName').focus();
                 return;
             }
             
@@ -2558,6 +2941,11 @@
                 // Insert after Full View button
                 viewModes.insertBefore(btn, customBtn);
             });
+            
+            // Sync mobile view buttons if the function exists
+            if (typeof syncMobileViewButtons === 'function') {
+                syncMobileViewButtons();
+            }
         }
 
         function deleteCustomLayout(layoutId, event) {
@@ -2787,9 +3175,20 @@
             initializeAutoSave();
             initializeToolbarState();
             initializeMobileUI();
+            initializeRestrictedMode();
             
             // Automatically load saved layout on startup BEFORE rendering
             await loadLayoutAutomatically();
+            
+            // Validate the current view - if custom layout doesn't exist, fallback to full
+            if (currentView === 'custom') {
+                const layout = getCurrentCustomLayout();
+                if (!layout) {
+                    console.warn('Custom layout not found, falling back to full view');
+                    currentView = 'full';
+                    currentCustomLayout = null;
+                }
+            }
             
             // Restore the correct active state after loading layouts
             restoreActiveState();
@@ -2797,6 +3196,7 @@
             // Ensure data is fully processed before rendering
             if (dashboardData && dashboardData.bookings) {
                 console.log('Data is ready, rendering dashboard...');
+                console.log('Current view:', currentView, 'Custom layout ID:', currentCustomLayout);
                 renderDashboard();
                 
                 // Initialize drag-and-drop after rendering
@@ -2804,24 +3204,20 @@
                     initializeDraggableWidgets();
                 }, 100);
                 
-                // Auto-apply filters on every page load to fix widget display issues
+                // Show success message without auto-applying filters
                 setTimeout(() => {
-                    console.log('Auto-applying filters on page load...');
-                    applyFilters();
-                    showToast('Dashboard refreshed automatically', 'success');
-                }, 500);
+                    console.log('Dashboard loaded successfully');
+                    showToast('Dashboard loaded', 'success');
+                }, 300);
             } else {
                 console.warn('Data not ready, retrying in 200ms...');
                 setTimeout(() => {
                     if (dashboardData && dashboardData.bookings) {
+                        console.log('Data is ready after retry, rendering dashboard...');
                         renderDashboard();
-                        
-                        // Auto-apply filters on every page load to fix widget display issues
                         setTimeout(() => {
-                            console.log('Auto-applying filters on page load...');
-                            applyFilters();
-                            showToast('Dashboard refreshed automatically', 'success');
-                        }, 500);
+                            initializeDraggableWidgets();
+                        }, 100);
                     } else {
                         console.error('Data still not ready after retry');
                         showToast('Error: Data not loaded properly', 'error');
@@ -2893,6 +3289,19 @@
             const mobileNav = document.getElementById('mobileNav');
             const mobileMenuIcon = document.getElementById('mobileMenuIcon');
             
+            // Close mobile menu function
+            function closeMobileMenu() {
+                if (mobileNav) {
+                    mobileNav.classList.remove('active');
+                    if (mobileMenuIcon) {
+                        mobileMenuIcon.textContent = '☰';
+                    }
+                }
+            }
+            
+            // Make it global so onclick can access it
+            window.closeMobileMenu = closeMobileMenu;
+            
             if (mobileMenuBtn && mobileNav) {
                 mobileMenuBtn.addEventListener('click', () => {
                     mobileNav.classList.toggle('active');
@@ -2902,16 +3311,14 @@
                 // Close mobile menu when clicking outside
                 document.addEventListener('click', (e) => {
                     if (!mobileMenuBtn.contains(e.target) && !mobileNav.contains(e.target)) {
-                        mobileNav.classList.remove('active');
-                        mobileMenuIcon.textContent = '☰';
+                        closeMobileMenu();
                     }
                 });
                 
                 // Close mobile menu when window is resized to desktop
                 window.addEventListener('resize', () => {
                     if (window.innerWidth > 768 && mobileNav.classList.contains('active')) {
-                        mobileNav.classList.remove('active');
-                        mobileMenuIcon.textContent = '☰';
+                        closeMobileMenu();
                     }
                 });
             }
@@ -2927,14 +3334,98 @@
                 if (btn) {
                     btn.addEventListener('click', () => {
                         action();
-                        // Close mobile menu after action
-                        if (mobileNav) {
-                            mobileNav.classList.remove('active');
-                            mobileMenuIcon.textContent = '☰';
-                        }
+                        closeMobileMenu();
                     });
                 }
             });
+            
+            // Sync mobile filters with desktop filters
+            function syncFilters(fromMobile = false) {
+                const timePeriodDesktop = document.getElementById('timePeriodFilter');
+                const timePeriodMobile = document.getElementById('timePeriodFilterMobile');
+                const statusDesktop = document.getElementById('statusFilter');
+                const statusMobile = document.getElementById('statusFilterMobile');
+                
+                if (fromMobile) {
+                    if (timePeriodDesktop && timePeriodMobile) timePeriodDesktop.value = timePeriodMobile.value;
+                    if (statusDesktop && statusMobile) statusDesktop.value = statusMobile.value;
+                } else {
+                    if (timePeriodDesktop && timePeriodMobile) timePeriodMobile.value = timePeriodDesktop.value;
+                    if (statusDesktop && statusMobile) statusMobile.value = statusDesktop.value;
+                }
+            }
+            
+            // Mobile filter event listeners
+            const applyFiltersMobile = document.getElementById('applyFiltersMobile');
+            const resetFiltersMobile = document.getElementById('resetFiltersMobile');
+            const timePeriodFilterMobile = document.getElementById('timePeriodFilterMobile');
+            const statusFilterMobile = document.getElementById('statusFilterMobile');
+            
+            if (applyFiltersMobile) {
+                applyFiltersMobile.addEventListener('click', () => {
+                    syncFilters(true);
+                    applyFilters();
+                    closeMobileMenu();
+                    showToast('Filters applied', 'success');
+                });
+            }
+            
+            if (resetFiltersMobile) {
+                resetFiltersMobile.addEventListener('click', () => {
+                    if (timePeriodFilterMobile) timePeriodFilterMobile.value = '';
+                    if (statusFilterMobile) statusFilterMobile.value = '';
+                    syncFilters(true);
+                    resetFilters();
+                    closeMobileMenu();
+                    showToast('Filters reset', 'info');
+                });
+            }
+            
+            // Sync mobile view buttons with desktop
+            function syncMobileViewButtons() {
+                const desktopViewBtns = document.querySelectorAll('.toolbar .view-mode-btn');
+                const mobileViewContainer = document.getElementById('mobileViewModes');
+                
+                if (!mobileViewContainer) return;
+                
+                // Clear mobile container
+                mobileViewContainer.innerHTML = '';
+                
+                // Rebuild mobile view buttons with proper event handling
+                Array.from(desktopViewBtns).forEach(desktopBtn => {
+                    const mobileBtn = document.createElement('button');
+                    mobileBtn.className = desktopBtn.className;
+                    mobileBtn.textContent = desktopBtn.textContent;
+                    mobileBtn.innerHTML = desktopBtn.innerHTML;
+                    
+                    // Copy data attributes
+                    if (desktopBtn.dataset.view) {
+                        mobileBtn.dataset.view = desktopBtn.dataset.view;
+                    }
+                    if (desktopBtn.dataset.layoutId) {
+                        mobileBtn.dataset.layoutId = desktopBtn.dataset.layoutId;
+                    }
+                    
+                    // Add click handler
+                    mobileBtn.addEventListener('click', (e) => {
+                        // Trigger the desktop button's click
+                        desktopBtn.click();
+                        // Close mobile menu
+                        closeMobileMenu();
+                    });
+                    
+                    mobileViewContainer.appendChild(mobileBtn);
+                });
+            }
+            
+            // Make it global so renderCustomLayoutButtons can access it
+            window.syncMobileViewButtons = syncMobileViewButtons;
+            
+            // Initial sync (with delay to ensure DOM is ready)
+            setTimeout(() => {
+                syncMobileViewButtons();
+                syncFilters(false);
+            }, 100);
             
             // View mode buttons
             document.querySelectorAll('.view-mode-btn').forEach(btn => {
@@ -2998,6 +3489,16 @@
                         triggerAutoSave();
                     }
                 }
+            });
+            
+            // Register KPI widgets as listeners for restricted mode changes
+            addRestrictedModeListener((isRestricted) => {
+                // Re-render KPI widgets when restricted mode changes
+                const kpis = calculateKPIs(filteredData);
+                const currentFilters = getCurrentFilters();
+                const improvements = calculateImprovements(filteredData, currentFilters);
+                renderKPIs(kpis, improvements, currentFilters);
+                console.log('KPI widgets updated due to restricted mode change:', isRestricted);
             });
         }
 
@@ -3134,7 +3635,7 @@
                 metadata: {
                     userAgent: navigator.userAgent,
                     screenResolution: `${screen.width}x${screen.height}`,
-                    savedBy: 'Venus Dashboard V0.1',
+                    savedBy: 'Venus Dashboard V0.9beta',
                     autoSaved: true
                 }
             };
@@ -3194,6 +3695,258 @@
         function closeModal(modalId) {
             document.getElementById(modalId).classList.remove('active');
         }
+        // Restricted Mode System Functions
+        function toggleRestrictedMode() {
+            if (restrictedMode) {
+                // Show password modal to unlock
+                openModal('dataAccessModal');
+                document.getElementById('dataAccessPassword').focus();
+            } else {
+                // Enable restricted mode immediately
+                enableRestrictedMode();
+                updateRestrictedModeButtonState();
+                showToast('Restricted Mode enabled', 'info');
+            }
+        }
+
+        function verifyRestrictedModePassword() {
+            const password = document.getElementById('dataAccessPassword').value;
+            const errorDiv = document.getElementById('passwordError');
+            
+            if (password === DATA_ACCESS_PASSWORD) {
+                restrictedMode = false;
+                closeModal('dataAccessModal');
+                disableRestrictedMode();
+                updateRestrictedModeButtonState();
+                showToast('Restricted Mode disabled - All data visible', 'success');
+                document.getElementById('dataAccessPassword').value = '';
+                errorDiv.style.display = 'none';
+            } else {
+                errorDiv.style.display = 'block';
+                document.getElementById('dataAccessPassword').value = '';
+                document.getElementById('dataAccessPassword').focus();
+            }
+        }
+
+        function enableRestrictedMode() {
+            restrictedMode = true;
+            
+            // Hide completely sensitive widgets
+            SENSITIVE_CONFIG.widgets.completelyHidden.forEach(widgetId => {
+                const widget = document.getElementById(widgetId);
+                if (widget) {
+                    hideWidgetCompletely(widget);
+                }
+            });
+            
+            // Hide partially sensitive widgets
+            SENSITIVE_CONFIG.widgets.partiallyHidden.forEach(widgetId => {
+                const widget = document.getElementById(widgetId);
+                if (widget) {
+                    hideWidgetPartially(widget);
+                }
+            });
+            
+            // Hide any revenue widgets by title across all layouts (custom and standard)
+            document.querySelectorAll('.widget .widget-title').forEach(titleEl => {
+                if (/revenue/i.test(titleEl.textContent || '')) {
+                    const targetWidget = titleEl.closest('.widget');
+                    if (targetWidget) {
+                        hideWidgetCompletely(targetWidget);
+                    }
+                }
+            });
+            
+            // Hide KPI values
+            hideKPIValues();
+            
+            // Refresh KPI cards to show masked values immediately
+            const kpis = calculateKPIs(filteredData);
+            const currentFilters = getCurrentFilters();
+            const improvements = calculateImprovements(filteredData, currentFilters);
+            renderKPIs(kpis, improvements, currentFilters);
+            
+            // Hide sensitive booking data
+            hideBookingSensitiveData();
+            
+            // Debug logging for restricted mode toggle
+            console.log('Restricted Mode enabled - KPI widgets masked');
+            
+            // Notify all listeners of the restricted mode change
+            notifyRestrictedModeChange(true);
+        }
+
+        function disableRestrictedMode() {
+            restrictedMode = false;
+            
+            // Show all widgets
+            document.querySelectorAll('.restricted-widget').forEach(widget => {
+                widget.classList.remove('restricted-widget');
+            });
+            
+            document.querySelectorAll('.restricted-overlay').forEach(overlay => {
+                overlay.remove();
+            });
+            
+            // Restore any widget contents that were hidden when locked
+            document.querySelectorAll('.widget .widget-content, .widget .widget-body, .widget canvas, .widget .chart-container').forEach(element => {
+                if (element.style.display === 'none') {
+                    element.style.display = '';
+                }
+            });
+            
+            // Show KPI values
+            showKPIValues();
+            
+            // Show sensitive booking data
+            showBookingSensitiveData();
+            
+            // Refresh KPI cards immediately to show actual values
+            const kpis = calculateKPIs(filteredData);
+            const currentFilters = getCurrentFilters();
+            const improvements = calculateImprovements(filteredData, currentFilters);
+            renderKPIs(kpis, improvements, currentFilters);
+            
+            // Instead of rebuilding the entire dashboard, just refresh the data content
+            // while preserving widget sizes and states
+            refreshDataContent();
+            
+            // Debug logging for restricted mode toggle
+            console.log('Restricted Mode disabled - KPI widgets refreshed');
+            
+            // Notify all listeners of the restricted mode change
+            notifyRestrictedModeChange(false);
+        }
+        
+        function hideWidgetCompletely(widget) {
+            widget.classList.add('restricted-widget');
+            
+            // Create lock overlay
+            const overlay = document.createElement('div');
+            overlay.className = 'restricted-overlay';
+            overlay.innerHTML = `
+                <div class="restricted-overlay-inner">
+                    <div class="restricted-overlay-icon">🔒</div>
+                    <div class="restricted-overlay-text">Sensitive data hidden — enter password to view</div>
+                </div>
+            `;
+            widget.appendChild(overlay);
+        }
+
+        function hideWidgetPartially(widget) {
+            widget.classList.add('restricted-widget');
+            
+            // Hide sensitive content within widget
+            const sensitiveElements = widget.querySelectorAll('.booking-email, .booking-payment, .booking-phone, .stat-value, .kpi-value');
+            sensitiveElements.forEach(element => {
+                element.classList.add('restricted-hidden');
+                element.setAttribute('data-original-text', element.textContent);
+                element.textContent = '••••';
+            });
+        }
+
+        function hideKPIValues() {
+            document.querySelectorAll('.kpi-value').forEach(element => {
+                element.classList.add('restricted-hidden');
+                element.setAttribute('data-original-text', element.textContent);
+                element.textContent = '••••';
+            });
+            
+            document.querySelectorAll('.kpi-trend span').forEach(element => {
+                if (element.textContent.includes('%') || element.textContent.includes('from')) {
+                    element.classList.add('restricted-hidden');
+                    element.setAttribute('data-original-text', element.textContent);
+                    element.textContent = 'Hidden';
+                }
+            });
+        }
+
+        function showKPIValues() {
+            document.querySelectorAll('.kpi-value[data-original-text]').forEach(element => {
+                    element.classList.remove('restricted-hidden');
+                    element.textContent = element.getAttribute('data-original-text');
+                    element.removeAttribute('data-original-text');
+            });
+            
+            document.querySelectorAll('.kpi-trend span[data-original-text]').forEach(element => {
+                element.classList.remove('restricted-hidden');
+                element.textContent = element.getAttribute('data-original-text');
+                element.removeAttribute('data-original-text');
+            });
+        }
+
+        function hideBookingSensitiveData() {
+            // Hide email fields
+            document.querySelectorAll('.mobile-booking-customer-email, [style*="font-size: 0.85rem; color: var(--text-secondary)"]').forEach(element => {
+                if (element.textContent.includes('@')) {
+                    element.classList.add('restricted-hidden');
+                element.setAttribute('data-original-text', element.textContent);
+                    element.textContent = '••••••••@•••••••';
+                }
+            });
+            
+            // Hide payment amounts in table cells and mobile booking totals
+            document.querySelectorAll('td strong, .mobile-booking-total').forEach(element => {
+                const text = element.textContent || '';
+                if (/\$/.test(text)) {
+                    element.classList.add('restricted-hidden');
+                    element.setAttribute('data-original-text', element.textContent);
+                    element.textContent = '••••';
+                }
+            });
+        }
+
+        function showBookingSensitiveData() {
+            // Show email fields
+            document.querySelectorAll('.mobile-booking-customer-email[data-original-text]').forEach(element => {
+                element.classList.remove('restricted-hidden');
+                element.textContent = element.getAttribute('data-original-text');
+                element.removeAttribute('data-original-text');
+            });
+            
+            // Show payment amounts in table cells and mobile booking totals
+            document.querySelectorAll('td strong[data-original-text], .mobile-booking-total[data-original-text]').forEach(element => {
+                element.classList.remove('restricted-hidden');
+                element.textContent = element.getAttribute('data-original-text');
+                element.removeAttribute('data-original-text');
+            });
+        }
+
+        function updateRestrictedModeButtonState() {
+            const buttons = ['lockBtn', 'lockBtnMobile'];
+            const icons = ['lockIcon', 'lockIconMobile'];
+            
+            buttons.forEach(buttonId => {
+                const button = document.getElementById(buttonId);
+                if (button) {
+                    button.className = `btn btn-icon lock-btn ${restrictedMode ? 'locked' : 'unlocked'}`;
+                }
+            });
+            
+            icons.forEach(iconId => {
+                const icon = document.getElementById(iconId);
+                if (icon) {
+                    icon.textContent = restrictedMode ? '🔒' : '🔓';
+                }
+            });
+        }
+
+        function initializeRestrictedMode() {
+            // Initialize button states
+            updateRestrictedModeButtonState();
+            
+            // Apply initial restricted state
+            if (restrictedMode) {
+                enableRestrictedMode();
+            }
+            
+            // Add keyboard support for password modal
+            document.getElementById('dataAccessPassword')?.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    verifyRestrictedModePassword();
+                }
+            });
+        }
 
         // Calculate KPIs
         function calculateKPIs(data) {
@@ -3213,7 +3966,7 @@
             });
 
             // Calculate average booking value
-            const avgBookingValue = totalRevenue / bookings.length;
+            const avgBookingValue = bookings.length > 0 ? totalRevenue / bookings.length : 0;
 
             // Count confirmed bookings
             const confirmedBookings = bookings.filter(b => b.status === 'confirmed').length;
@@ -3238,6 +3991,343 @@
             };
         }
 
+        // Calculate improvement values between current and previous periods
+        function calculateImprovements(currentData, currentFilters) {
+            if (!currentData || !currentData.bookings || !dashboardData) return {};
+
+            const currentKPIs = calculateKPIs(currentData);
+            const timePeriod = currentFilters.timePeriod;
+            const status = currentFilters.status;
+
+            // Get previous period data
+            const previousData = getPreviousPeriodData(timePeriod, status);
+            if (!previousData || !previousData.bookings || previousData.bookings.length === 0) {
+                return {
+                    totalRevenue: { value: 0, text: 'No previous data available.', color: 'neutral' },
+                    totalBookings: { value: 0, text: 'No previous data available.', color: 'neutral' },
+                    avgBookingValue: { value: 0, text: 'No previous data available.', color: 'neutral' },
+                    confirmedBookings: { value: 0, text: 'No previous data available.', color: 'neutral' }
+                };
+            }
+
+            const previousKPIs = calculateKPIs(previousData);
+            const previousLabel = getPreviousPeriodLabel(timePeriod);
+
+            // Calculate percentage improvements
+            const improvements = {};
+
+            // Total Revenue improvement
+            if (previousKPIs.totalRevenue > 0) {
+                const revenueChange = ((currentKPIs.totalRevenue - previousKPIs.totalRevenue) / previousKPIs.totalRevenue) * 100;
+                improvements.totalRevenue = {
+                    value: revenueChange,
+                    text: formatImprovementText(revenueChange, previousLabel),
+                    color: revenueChange >= 0 ? 'positive' : 'negative'
+                };
+            } else {
+                improvements.totalRevenue = {
+                    value: 0,
+                    text: 'No previous data available.',
+                    color: 'neutral'
+                };
+            }
+
+            // Total Bookings improvement
+            if (previousKPIs.totalBookings > 0) {
+                const bookingsChange = ((currentKPIs.totalBookings - previousKPIs.totalBookings) / previousKPIs.totalBookings) * 100;
+                improvements.totalBookings = {
+                    value: bookingsChange,
+                    text: formatImprovementText(bookingsChange, previousLabel),
+                    color: bookingsChange >= 0 ? 'positive' : 'negative'
+                };
+            } else {
+                improvements.totalBookings = {
+                    value: 0,
+                    text: 'No previous data available.',
+                    color: 'neutral'
+                };
+            }
+
+            // Average Booking Value improvement
+            if (previousKPIs.avgBookingValue > 0) {
+                const avgChange = ((currentKPIs.avgBookingValue - previousKPIs.avgBookingValue) / previousKPIs.avgBookingValue) * 100;
+                improvements.avgBookingValue = {
+                    value: avgChange,
+                    text: formatImprovementText(avgChange, previousLabel),
+                    color: avgChange >= 0 ? 'positive' : 'negative'
+                };
+            } else {
+                improvements.avgBookingValue = {
+                    value: 0,
+                    text: 'No previous data available.',
+                    color: 'neutral'
+                };
+            }
+
+            // Confirmed Bookings improvement
+            if (previousKPIs.confirmedBookings > 0) {
+                const confirmedChange = ((currentKPIs.confirmedBookings - previousKPIs.confirmedBookings) / previousKPIs.confirmedBookings) * 100;
+                improvements.confirmedBookings = {
+                    value: confirmedChange,
+                    text: formatImprovementText(confirmedChange, previousLabel),
+                    color: confirmedChange >= 0 ? 'positive' : 'negative'
+                };
+            } else {
+                improvements.confirmedBookings = {
+                    value: 0,
+                    text: 'No previous data available.',
+                    color: 'neutral'
+                };
+            }
+
+            return improvements;
+        }
+
+        // Get previous period data based on current time period
+        function getPreviousPeriodData(timePeriod, status) {
+            if (!dashboardData || !dashboardData.bookings) return null;
+
+            let previousRange = null;
+            const now = new Date();
+
+            // Determine previous period range
+            switch (timePeriod) {
+                case 'thisWeek':
+                    // Previous week (7 days before current week)
+                    const currentWeekStart = new Date(now);
+                    currentWeekStart.setDate(now.getDate() - now.getDay());
+                    currentWeekStart.setHours(0, 0, 0, 0);
+                    
+                    const previousWeekEnd = new Date(currentWeekStart);
+                    previousWeekEnd.setDate(currentWeekStart.getDate() - 1);
+                    previousWeekEnd.setHours(23, 59, 59, 999);
+                    
+                    const previousWeekStart = new Date(previousWeekEnd);
+                    previousWeekStart.setDate(previousWeekEnd.getDate() - 6);
+                    previousWeekStart.setHours(0, 0, 0, 0);
+                    
+                    previousRange = { start: previousWeekStart, end: previousWeekEnd };
+                    break;
+
+                case 'thisMonth':
+                    // Previous month
+                    const previousMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+                    const previousMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59, 999);
+                    previousRange = { start: previousMonthStart, end: previousMonthEnd };
+                    break;
+
+                case 'lastMonth':
+                    // Month before last month
+                    const monthBeforeLastStart = new Date(now.getFullYear(), now.getMonth() - 2, 1);
+                    const monthBeforeLastEnd = new Date(now.getFullYear(), now.getMonth() - 1, 0, 23, 59, 59, 999);
+                    previousRange = { start: monthBeforeLastStart, end: monthBeforeLastEnd };
+                    break;
+
+                case 'last3Months':
+                    // 3 months before the last 3 months
+                    const threeMonthsBeforeStart = new Date(now.getFullYear(), now.getMonth() - 6, 1);
+                    const threeMonthsBeforeEnd = new Date(now.getFullYear(), now.getMonth() - 3, 0, 23, 59, 59, 999);
+                    previousRange = { start: threeMonthsBeforeStart, end: threeMonthsBeforeEnd };
+                    break;
+
+                case 'allTime':
+                    // Compare latest month vs previous month
+                    const latestMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+                    const latestMonthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
+                    const previousLatestMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+                    const previousLatestMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59, 999);
+                    
+                    // For "all time", we compare current month vs previous month
+                    previousRange = { start: previousLatestMonthStart, end: previousLatestMonthEnd };
+                    break;
+
+                default: {
+                    // Handle explicit month keys like 'mar2025'
+                    const match = /^([a-z]{3})(\d{4})$/i.exec(timePeriod || '');
+                    if (!match) return null;
+                    const map = { jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11 };
+                    const monthIdx = map[match[1].toLowerCase()];
+                    const year = parseInt(match[2], 10);
+                    const prevStart = new Date(year, monthIdx - 1, 1);
+                    const prevEnd = new Date(year, monthIdx, 0, 23, 59, 59, 999);
+                    previousRange = { start: prevStart, end: prevEnd };
+                    break;
+                }
+            }
+
+            if (!previousRange) return null;
+
+            // Filter bookings for previous period
+            let previousBookings = dashboardData.bookings.filter(booking => {
+                const bookingDate = new Date(booking.date);
+                return bookingDate >= previousRange.start && bookingDate <= previousRange.end;
+            });
+
+            // Apply status filter if specified
+            if (status && status !== '') {
+                previousBookings = previousBookings.filter(booking => booking.status === status);
+            }
+
+            return {
+                bookings: previousBookings,
+                settings: dashboardData.settings
+            };
+        }
+
+        // Format improvement text with explicit comparison label
+        function formatImprovementText(change, comparedToLabel) {
+            if (change === 0) return `No change compared to ${comparedToLabel}`;
+            const isPositive = change > 0;
+            const arrow = isPositive ? '↑' : '↓';
+            const formattedChange = Math.abs(change).toFixed(1);
+            return `${arrow}${formattedChange}% compared to ${comparedToLabel}`;
+        }
+
+        // Helpers to build explicit period labels
+        function getMonthName(index) {
+            return ['January','February','March','April','May','June','July','August','September','October','November','December'][index];
+        }
+
+        function getISOWeekNumber(date) {
+            const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+            const dayNum = d.getUTCDay() || 7;
+            d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+            const yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+            const weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+            return { week: weekNo, year: d.getUTCFullYear() };
+        }
+
+        function getCurrentPeriodLabel(filters) {
+            const timePeriod = filters?.timePeriod;
+            const now = new Date();
+            if (timePeriod === 'thisWeek') {
+                const { week, year } = getISOWeekNumber(now);
+                return `Week ${week}, ${year}`;
+            }
+            if (timePeriod === 'thisMonth') {
+                return `${getMonthName(now.getMonth())} ${now.getFullYear()}`;
+            }
+            if (timePeriod === 'lastMonth') {
+                const last = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+                return `${getMonthName(last.getMonth())} ${last.getFullYear()}`;
+            }
+            if (timePeriod === 'last3Months') {
+                const end = new Date(now.getFullYear(), now.getMonth(), 1);
+                const start = new Date(now.getFullYear(), now.getMonth() - 2, 1);
+                return `${getMonthName(start.getMonth())}–${getMonthName(end.getMonth())} ${end.getFullYear()}`;
+            }
+            if (timePeriod === 'allTime') return 'All Time';
+            // Handle explicit month keys like 'mar2025'
+            const match = /^([a-z]{3})(\d{4})$/i.exec(timePeriod || '');
+            if (match) {
+                const map = { jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11 };
+                const monthIdx = map[match[1].toLowerCase()];
+                const year = parseInt(match[2], 10);
+                if (monthIdx != null) return `${getMonthName(monthIdx)} ${year}`;
+            }
+            return 'Selected period';
+        }
+
+        function getPreviousPeriodLabel(timePeriod) {
+            const now = new Date();
+            switch (timePeriod) {
+                case 'thisWeek': {
+                    const start = new Date(now);
+                    start.setDate(now.getDate() - now.getDay());
+                    const prevEnd = new Date(start);
+                    prevEnd.setDate(start.getDate() - 1);
+                    const { week, year } = getISOWeekNumber(prevEnd);
+                    return `Week ${week}, ${year}`;
+                }
+                case 'thisMonth': {
+                    const last = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+                    return `${getMonthName(last.getMonth())} ${last.getFullYear()}`;
+                }
+                case 'lastMonth': {
+                    const prev = new Date(now.getFullYear(), now.getMonth() - 2, 1);
+                    return `${getMonthName(prev.getMonth())} ${prev.getFullYear()}`;
+                }
+                case 'last3Months': {
+                    const end = new Date(now.getFullYear(), now.getMonth() - 3, 1);
+                    const start = new Date(now.getFullYear(), now.getMonth() - 5, 1);
+                    return `${getMonthName(start.getMonth())}–${getMonthName(end.getMonth())} ${end.getFullYear()}`;
+                }
+                case 'allTime': {
+                    const prev = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+                    return `${getMonthName(prev.getMonth())} ${prev.getFullYear()}`;
+                }
+                default: {
+                    const match = /^([a-z]{3})(\d{4})$/i.exec(timePeriod || '');
+                    if (match) {
+                        const map = { jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11 };
+                        const monthIdx = map[match[1].toLowerCase()];
+                        const year = parseInt(match[2], 10);
+                        const prev = new Date(year, monthIdx - 1, 1);
+                        return `${getMonthName(prev.getMonth())} ${prev.getFullYear()}`;
+                    }
+                    return 'previous period';
+                }
+            }
+        }
+
+        // Empty-state utilities
+        function getStatusLabelForEmptyMessage(status) {
+            if (!status) return '';
+            const map = { pending: 'pending', confirmed: 'confirmed', cancelled: 'cancelled' };
+            return map[status] || status;
+        }
+
+        function buildEmptyMessage(baseType = 'data') {
+            const filters = getCurrentFilters();
+            const period = getCurrentPeriodLabel(filters);
+            const statusLabel = getStatusLabelForEmptyMessage(filters.status);
+            if (baseType === 'bookings' && statusLabel) {
+                return `No ${statusLabel} bookings for ${period}.`;
+            }
+            if (baseType === 'bookings') {
+                return `No bookings for ${period}.`;
+            }
+            if (statusLabel) {
+                return `No ${statusLabel} data for ${period}.`;
+            }
+            return `No data available for ${period}.`;
+        }
+
+        function ensureEmptyState(container, message) {
+            if (!container) return;
+            container.style.position = container.style.position || 'relative';
+            let overlay = container.querySelector('.empty-state');
+            if (!overlay) {
+                overlay = document.createElement('div');
+                overlay.className = 'empty-state';
+                container.appendChild(overlay);
+            }
+            // Respect Restricted Mode: hide empty-state text when locked
+            if (restrictedMode) {
+                overlay.textContent = 'Hidden';
+            } else {
+                overlay.textContent = message;
+            }
+        }
+
+        function clearEmptyState(container) {
+            if (!container) return;
+            const overlay = container.querySelector('.empty-state');
+            if (overlay) overlay.remove();
+        }
+
+        // Inject minimal styles for empty states and smooth text updates
+        (function injectEmptyStateStyles(){
+            const id = 'empty-state-style';
+            if (document.getElementById(id)) return;
+            const style = document.createElement('style');
+            style.id = id;
+            style.textContent = `
+                .empty-state{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--text-secondary);text-align:center;padding:12px;background:transparent}
+            `;
+            document.head.appendChild(style);
+        })();
+
         // Render Dashboard
         function renderDashboard() {
             console.log('renderDashboard called');
@@ -3248,7 +4338,10 @@
 
             console.log('Rendering dashboard with', filteredData.bookings.length, 'bookings');
             const kpis = calculateKPIs(filteredData);
-            renderKPIs(kpis);
+            const currentFilters = getCurrentFilters();
+            const improvements = calculateImprovements(filteredData, currentFilters);
+            renderKPIs(kpis, improvements, currentFilters);
+            renderStats();
             
             // Check if we have a saved layout to restore
             if (window.savedLayout && window.savedLayout.widgets && window.savedLayout.widgets.length > 0) {
@@ -3274,45 +4367,65 @@
             }
             
             renderWidgets();
+            
+            // Apply Restricted Mode after all widgets render
+            if (restrictedMode) {
+                enableRestrictedMode();
+            }
         }
 
         // Render KPI Cards
-        function renderKPIs(kpis) {
+        function renderKPIs(kpis, improvements = null, currentFilters = null) {
             const kpiGrid = document.getElementById('kpiGrid');
+            const isRestricted = restrictedMode;
+            
+            // Debug logging for KPI widget re-render
+            console.log('KPI widgets re-rendered - Restricted Mode:', isRestricted);
+            
+            // Get status-based titles and colors
+            const status = currentFilters?.status || '';
+            const { titles, colors } = getStatusBasedKPITitles(status);
+            
+            // Get improvement data or use defaults
+            const hasCurrentData = (kpis.totalBookings ?? 0) > 0 || (kpis.totalRevenue ?? 0) > 0;
+            const revenueImprovement = hasCurrentData ? (improvements?.totalRevenue || { text: 'No previous data available.', color: 'neutral' }) : { text: `No data for ${getCurrentPeriodLabel(currentFilters)}.`, color: 'neutral' };
+            const bookingsImprovement = hasCurrentData ? (improvements?.totalBookings || { text: 'No previous data available.', color: 'neutral' }) : { text: `No data for ${getCurrentPeriodLabel(currentFilters)}.`, color: 'neutral' };
+            const avgValueImprovement = hasCurrentData ? (improvements?.avgBookingValue || { text: 'No previous data available.', color: 'neutral' }) : { text: `No data for ${getCurrentPeriodLabel(currentFilters)}.`, color: 'neutral' };
+            
             kpiGrid.innerHTML = `
-                <div class="kpi-card" style="--kpi-color: var(--accent-primary);">
+                <div class="kpi-card" style="--kpi-color: ${colors.revenue};">
                     <div class="kpi-header">
-                        <span class="kpi-title">Total Revenue</span>
+                        <span class="kpi-title">${titles.revenue}</span>
                         <span class="kpi-icon">💰</span>
                     </div>
-                    <div class="kpi-value">$${kpis.totalRevenue?.toLocaleString() || 0}</div>
-                    <div class="kpi-trend positive">
-                        <span>↗</span>
-                        <span>+12.5% from last period</span>
+                    <div class="kpi-value" ${isRestricted ? 'data-hidden="true"' : ''}>${isRestricted ? '••••' : '$' + ((kpis.totalRevenue ?? 0).toLocaleString())}</div>
+                    <div class="kpi-trend ${hasCurrentData && revenueImprovement.color === 'positive' ? 'positive' : hasCurrentData && revenueImprovement.color === 'negative' ? 'negative' : ''}">
+                        <span>${hasCurrentData ? (revenueImprovement.color === 'positive' ? '↗' : revenueImprovement.color === 'negative' ? '↘' : '→') : ''}</span>
+                        <span>${isRestricted ? 'Hidden' : revenueImprovement.text}</span>
                     </div>
                 </div>
 
-                <div class="kpi-card" style="--kpi-color: var(--accent-secondary);">
+                <div class="kpi-card" style="--kpi-color: ${colors.bookings};">
                     <div class="kpi-header">
-                        <span class="kpi-title">Total Bookings</span>
+                        <span class="kpi-title">${titles.bookings}</span>
                         <span class="kpi-icon">📅</span>
                     </div>
-                    <div class="kpi-value">${kpis.totalBookings || 0}</div>
-                    <div class="kpi-trend positive">
-                        <span>↗</span>
-                        <span>+8.3% from last period</span>
+                    <div class="kpi-value" ${isRestricted ? 'data-hidden="true"' : ''}>${isRestricted ? '••••' : (kpis.totalBookings ?? 0)}</div>
+                    <div class="kpi-trend ${hasCurrentData && bookingsImprovement.color === 'positive' ? 'positive' : hasCurrentData && bookingsImprovement.color === 'negative' ? 'negative' : ''}">
+                        <span>${hasCurrentData ? (bookingsImprovement.color === 'positive' ? '↗' : bookingsImprovement.color === 'negative' ? '↘' : '→') : ''}</span>
+                        <span>${isRestricted ? 'Hidden' : bookingsImprovement.text}</span>
                     </div>
                 </div>
 
-                <div class="kpi-card" style="--kpi-color: var(--accent-warning);">
+                <div class="kpi-card" style="--kpi-color: ${colors.avgValue};">
                     <div class="kpi-header">
-                        <span class="kpi-title">Avg Booking Value</span>
+                        <span class="kpi-title">${titles.avgValue}</span>
                         <span class="kpi-icon">📊</span>
                     </div>
-                    <div class="kpi-value">$${kpis.avgBookingValue?.toFixed(2) || 0}</div>
-                    <div class="kpi-trend positive">
-                        <span>↗</span>
-                        <span>+3.2% from last period</span>
+                    <div class="kpi-value" ${isRestricted ? 'data-hidden="true"' : ''}>${isRestricted ? '••••' : '$' + ((kpis.avgBookingValue ?? 0).toFixed(2))}</div>
+                    <div class="kpi-trend ${hasCurrentData && avgValueImprovement.color === 'positive' ? 'positive' : hasCurrentData && avgValueImprovement.color === 'negative' ? 'negative' : ''}">
+                        <span>${hasCurrentData ? (avgValueImprovement.color === 'positive' ? '↗' : avgValueImprovement.color === 'negative' ? '↘' : '→') : ''}</span>
+                        <span>${isRestricted ? 'Hidden' : avgValueImprovement.text}</span>
                     </div>
                 </div>
 
@@ -3321,13 +4434,79 @@
                         <span class="kpi-title">Popular Service</span>
                         <span class="kpi-icon">⭐</span>
                     </div>
-                    <div class="kpi-value" style="font-size: 1.2rem;">${kpis.popularService || 'N/A'}</div>
+                    <div class="kpi-value" style="font-size: 1.2rem;" ${isRestricted ? 'data-hidden="true"' : ''}>${isRestricted ? '••••' : kpis.popularService || 'N/A'}</div>
                     <div class="kpi-trend">
-                        <span>Most requested</span>
+                        <span>${isRestricted ? 'Hidden' : 'Most requested'}</span>
                     </div>
                 </div>
             `;
         }
+
+        // Get status-based KPI titles and colors
+        function getStatusBasedKPITitles(status) {
+            const baseTitles = {
+                revenue: 'Total Revenue',
+                bookings: 'Total Bookings',
+                avgValue: 'Avg Booking Value'
+            };
+
+            const baseColors = {
+                revenue: 'var(--accent-primary)',
+                bookings: 'var(--accent-secondary)',
+                avgValue: 'var(--accent-warning)'
+            };
+
+            switch (status) {
+                case 'confirmed':
+                    return {
+                        titles: {
+                            revenue: 'Confirmed Revenue',
+                            bookings: 'Confirmed Bookings',
+                            avgValue: 'Confirmed Avg Value'
+                        },
+                        colors: {
+                            revenue: 'var(--accent-secondary)',
+                            bookings: 'var(--accent-secondary)',
+                            avgValue: 'var(--accent-secondary)'
+                        }
+                    };
+                case 'pending':
+                    return {
+                        titles: {
+                            revenue: 'Pending Revenue',
+                            bookings: 'Pending Bookings',
+                            avgValue: 'Pending Avg Value'
+                        },
+                        colors: {
+                            revenue: 'var(--accent-warning)',
+                            bookings: 'var(--accent-warning)',
+                            avgValue: 'var(--accent-warning)'
+                        }
+                    };
+                case 'cancelled':
+                    return {
+                        titles: {
+                            revenue: 'Cancelled Revenue (Loss)',
+                            bookings: 'Cancelled Bookings',
+                            avgValue: 'Cancelled Avg Value'
+                        },
+                        colors: {
+                            revenue: 'var(--accent-danger)',
+                            bookings: 'var(--accent-danger)',
+                            avgValue: 'var(--accent-danger)'
+                        }
+                    };
+                default:
+                    return {
+                        titles: baseTitles,
+                        colors: baseColors
+                    };
+            }
+        }
+
+        // Old functions removed - using new Restricted Mode system
+
+        // Old initializeLockSystem function removed - using initializeRestrictedMode
 
         // Wait for DOM elements to be ready
         function waitForElement(selector, timeout = 1000) {
@@ -3358,9 +4537,12 @@
             });
         }
 
+        // Automatic widget insertion functions removed - widgets must be explicitly added via Add Widget
+
         // Render Widgets
         function renderWidgets() {
             const grid = document.getElementById('dashboardGrid');
+            console.log('Rendering widgets for view:', currentView, 'custom layout:', currentCustomLayout);
             
             // Clear any existing widgets to prevent duplication
             grid.innerHTML = '';
@@ -3392,17 +4574,25 @@
                             </div>
                         </div>
                     `;
+                    
+                    // Ensure Add Widget placeholder is present even in empty state
+                    setTimeout(() => {
+                        ensureAddWidgetPlaceholder();
+                    }, 100);
                 }
             } else {
                 // Full view
                 grid.innerHTML = `
                     <div class="widget widget-medium" id="widget-revenue">
                         <div class="widget-header">
-                            <h3 class="widget-title">Revenue Over Time</h3>
+                            <h3 class="widget-title">Revenue Chart</h3>
                             <div class="widget-actions no-print">
                                 <button class="widget-btn" onclick="refreshWidget('revenue')">🔄</button>
                                 <button class="widget-btn" onclick="expandWidget('revenue')">⛶</button>
                             </div>
+                        </div>
+                        <div class="booking-list-filter-status" id="filter-status-widget-revenue">
+                            <!-- Filter status will be displayed here -->
                         </div>
                         <div class="chart-container">
                             <canvas id="revenueChart"></canvas>
@@ -3417,29 +4607,37 @@
                                 <button class="widget-btn" onclick="refreshWidget('services')">🔄</button>
                             </div>
                         </div>
+                        <div class="booking-list-filter-status" id="filter-status-widget-services">
+                            <!-- Filter status will be displayed here -->
+                        </div>
                         <div class="chart-container">
                             <canvas id="servicesChart"></canvas>
                         </div>
                         <div class="resize-handle"></div>
                     </div>
 
-                    <div class="widget widget-full" id="widget-all-bookings">
+                    <div class="widget widget-full" id="widget-bookings">
                         <div class="widget-header">
-                            <h3 class="widget-title">All Bookings</h3>
+                            <h3 class="widget-title">Bookings</h3>
                             <div class="widget-actions no-print">
+                                <button class="widget-btn" onclick="toggleBookingWidgetMode('widget-bookings')" title="Toggle view mode">⛶</button>
                                 <button class="widget-btn" onclick="exportBookings()">📥</button>
-                                <button class="widget-btn" onclick="refreshWidget('all-bookings')">🔄</button>
+                                <button class="widget-btn" onclick="refreshWidget('bookings')">🔄</button>
+                                <button class="widget-btn" onclick="removeWidget('widget-bookings')" title="Delete widget">🗑️</button>
                             </div>
                         </div>
-                        <div class="booking-list-filter-status" id="booking-list-filter-status-all-bookings">
+                        <div class="booking-list-filter-status" id="booking-list-filter-status-widget-bookings">
                             <!-- Filter status will be displayed here -->
                         </div>
-                        <div id="allBookingsTable"></div>
+                        <div id="table-widget-bookings"></div>
                     </div>
 
                     <div class="widget widget-medium" id="widget-stats">
                         <div class="widget-header">
                             <h3 class="widget-title">Quick Stats</h3>
+                            <div class="widget-actions no-print">
+                                <button class="widget-btn" onclick="refreshWidget('stats')">🔄</button>
+                            </div>
                         </div>
                         <div class="stats-grid" id="statsGrid"></div>
                     </div>
@@ -3465,7 +4663,7 @@
                     waitForElement('#revenueChart', 500).catch(() => null),
                     waitForElement('#timelineChart', 500).catch(() => null),
                     waitForElement('#statsGrid', 500).catch(() => null),
-                    waitForElement('#allBookingsTable', 500).catch(() => null)
+                    waitForElement('#table-widget-bookings', 500).catch(() => null)
                 ]).then(() => {
                     // All elements are ready, initialize charts
                     createRevenueChart();
@@ -3474,8 +4672,18 @@
                         createTimelineChart();
                         renderStats();
                     }
-                    renderBookingsTable();
+                    // Initialize Bookings widget on full view load
+                    createUnifiedBookingTable(document.getElementById('table-widget-bookings'), 'widget-bookings', 'large');
+                    updateBookingListFilterStatus('widget-bookings');
                     initializeDraggableWidgets();
+                    
+                    // Re-apply Restricted Mode after content has been rendered
+                    if (restrictedMode) {
+                        enableRestrictedMode();
+                    }
+                    
+                    // Restore widget states (expanded/collapsed)
+                    restoreWidgetStates();
                 }).catch(() => {
                     // Fallback to setTimeout if Promise approach fails
                     setTimeout(() => {
@@ -3485,8 +4693,18 @@
                             createTimelineChart();
                             renderStats();
                         }
-                        renderBookingsTable();
+                        // Initialize Bookings widget on full view load
+                        createUnifiedBookingTable(document.getElementById('table-widget-bookings'), 'widget-bookings', 'large');
+                        updateBookingListFilterStatus('widget-bookings');
                         initializeDraggableWidgets();
+                        
+                        // Re-apply Restricted Mode after content has been rendered
+                        if (restrictedMode) {
+                            enableRestrictedMode();
+                        }
+                        
+                        // Restore widget states (expanded/collapsed)
+                        restoreWidgetStates();
                     }, 300);
                 });
             }
@@ -3498,9 +4716,27 @@
             if (!canvas) return;
 
             const ctx = canvas.getContext('2d');
+            // Ensure a reflow for fresh animation after page refresh
+            void canvas.offsetHeight;
             
-            // Clear the canvas before drawing
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            // Destroy existing chart instance before creating new one
+            // Check both our stored instance and Chart.js's internal registry
+            const existingChart = Chart.getChart(canvas);
+            if (existingChart) {
+                try {
+                    existingChart.destroy();
+                } catch (e) {
+                    console.warn('Error destroying existing revenue chart:', e);
+                }
+            }
+            if (revenueChartInstance && revenueChartInstance !== existingChart) {
+                try {
+                    revenueChartInstance.destroy();
+                } catch (e) {
+                    console.warn('Error destroying stored revenue chart:', e);
+                }
+            }
+            revenueChartInstance = null;
             
             // Prepare data by date
             const revenueByDate = {};
@@ -3519,13 +4755,18 @@
             const dates = Object.keys(revenueByDate).sort();
             const revenues = dates.map(date => revenueByDate[date]);
 
-            // Handle empty data case
+            // Handle empty data case with overlay
+            const container = canvas.closest('.chart-container');
             if (dates.length === 0) {
-                dates.push('No Data');
-                revenues.push(0);
+                const currentLabel = getCurrentPeriodLabel(getCurrentFilters());
+                ensureEmptyState(container, `No data available for ${currentLabel}.`);
+                updateRevenueFilterStatus('widget-revenue');
+                return;
+            } else {
+                clearEmptyState(container);
             }
 
-            new Chart(ctx, {
+            revenueChartInstance = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: dates,
@@ -3541,6 +4782,10 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    animation: {
+                        duration: 1000,
+                        easing: 'easeOutQuart'
+                    },
                     plugins: {
                         legend: {
                             display: false
@@ -3565,6 +4810,9 @@
                     }
                 }
             });
+            
+            // Update filter status display
+            updateRevenueFilterStatus('widget-revenue');
         }
 
         // Create Services Distribution Chart
@@ -3573,9 +4821,27 @@
             if (!canvas) return;
 
             const ctx = canvas.getContext('2d');
+            // Ensure a reflow for fresh animation after page refresh
+            void canvas.offsetHeight;
             
-            // Clear the canvas before drawing
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            // Destroy existing chart instance before creating new one
+            // Check both our stored instance and Chart.js's internal registry
+            const existingChart = Chart.getChart(canvas);
+            if (existingChart) {
+                try {
+                    existingChart.destroy();
+                } catch (e) {
+                    console.warn('Error destroying existing services chart:', e);
+                }
+            }
+            if (servicesChartInstance && servicesChartInstance !== existingChart) {
+                try {
+                    servicesChartInstance.destroy();
+                } catch (e) {
+                    console.warn('Error destroying stored services chart:', e);
+                }
+            }
+            servicesChartInstance = null;
             
             // Count services
             const serviceCount = {};
@@ -3591,13 +4857,18 @@
             const labels = Object.keys(serviceCount);
             const data = Object.values(serviceCount);
 
-            // Handle empty data case
+            // Handle empty data case with overlay
+            const container = canvas.closest('.chart-container');
             if (labels.length === 0) {
-                labels.push('No Services');
-                data.push(0);
+                const currentLabel = getCurrentPeriodLabel(getCurrentFilters());
+                ensureEmptyState(container, `No data available for ${currentLabel}.`);
+                updateServicesFilterStatus('widget-services');
+                return;
+            } else {
+                clearEmptyState(container);
             }
 
-            new Chart(ctx, {
+            servicesChartInstance = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
                     labels: labels,
@@ -3620,6 +4891,12 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    animation: {
+                        animateRotate: true,
+                        animateScale: true,
+                        duration: 1000,
+                        easing: 'easeOutQuart'
+                    },
                     plugins: {
                         legend: {
                             position: 'bottom'
@@ -3627,6 +4904,9 @@
                     }
                 }
             });
+            
+            // Update filter status display
+            updateServicesFilterStatus('widget-services');
         }
 
         // Create Timeline Chart
@@ -3638,9 +4918,27 @@
             }
 
             const ctx = canvas.getContext('2d');
+            // Ensure a reflow for fresh animation after page refresh
+            void canvas.offsetHeight;
             
-            // Clear the canvas before drawing
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            // Destroy existing chart instance before creating new one
+            // Check both our stored instance and Chart.js's internal registry
+            const existingChart = Chart.getChart(canvas);
+            if (existingChart) {
+                try {
+                    existingChart.destroy();
+                } catch (e) {
+                    console.warn('Error destroying existing timeline chart:', e);
+                }
+            }
+            if (timelineChartInstance && timelineChartInstance !== existingChart) {
+                try {
+                    timelineChartInstance.destroy();
+                } catch (e) {
+                    console.warn('Error destroying stored timeline chart:', e);
+                }
+            }
+            timelineChartInstance = null;
             
             // Count bookings by date
             const bookingsByDate = {};
@@ -3652,13 +4950,17 @@
             const dates = Object.keys(bookingsByDate).sort();
             const counts = dates.map(date => bookingsByDate[date]);
 
-            // Handle empty data case
+            // Handle empty data case with overlay
+            const container = canvas.closest('.chart-container');
             if (dates.length === 0) {
-                dates.push('No Data');
-                counts.push(0);
+                const currentLabel = getCurrentPeriodLabel(getCurrentFilters());
+                ensureEmptyState(container, `No data available for ${currentLabel}.`);
+                return;
+            } else {
+                clearEmptyState(container);
             }
 
-            new Chart(ctx, {
+            timelineChartInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: dates,
@@ -3671,6 +4973,10 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    animation: {
+                        duration: 1000,
+                        easing: 'easeOutQuart'
+                    },
                     plugins: {
                         legend: {
                             display: false
@@ -3700,150 +5006,38 @@
             const totalServices = Object.keys(services).length;
             const avgPrice = totalServices > 0 ? Object.values(services).reduce((sum, s) => sum + s.price, 0) / totalServices : 0;
             const maxAppointments = filteredData.settings.maxAppointmentsPerDay;
+            const isRestricted = restrictedMode;
 
             statsGrid.innerHTML = `
                 <div class="stat-item">
                     <div class="stat-label">Available Services</div>
-                    <div class="stat-value">${totalServices}</div>
+                    <div class="stat-value">${isRestricted ? '••••' : totalServices}</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-label">Avg Service Price</div>
-                    <div class="stat-value">$${avgPrice.toFixed(2)}</div>
+                    <div class="stat-value">${isRestricted ? '••••' : '$' + avgPrice.toFixed(2)}</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-label">Max Daily Appointments</div>
-                    <div class="stat-value">${maxAppointments}</div>
+                    <div class="stat-value">${isRestricted ? '••••' : maxAppointments}</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-label">Time Slots</div>
-                    <div class="stat-value">${filteredData.settings.availableTimeSlots.length}</div>
+                    <div class="stat-value">${isRestricted ? '••••' : filteredData.settings.availableTimeSlots.length}</div>
                 </div>
             `;
         }
-
-        // Render Bookings Table
+        // Legacy function - now handled by createUnifiedBookingTable
         function renderBookingsTable() {
-            const container = document.getElementById('allBookingsTable');
-            if (!container) return;
-
-            const bookings = filteredData.bookings.slice(0, undefined);
-
-            let tableHtml = `
-                <div class="table-responsive">
-                    <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Customer</th>
-                            <th>Services</th>
-                            <th>Car</th>
-                            <th>Total</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-            `;
-
-            let mobileCardsHtml = `
-                <div class="mobile-booking-cards">
-            `;
-
-            bookings.forEach(booking => {
-                let total = 0;
-                const serviceNames = booking.services.map(serviceId => {
-                    const service = filteredData.settings.serviceTypes[serviceId];
-                    if (service) {
-                        total += service.price;
-                        return service.name;
-                    }
-                    return serviceId;
-                });
-
-                // Desktop table row - make it clickable
-                tableHtml += `
-                    <tr onclick="showBookingDetails('${booking.id}')" style="cursor: pointer;" title="Click to view details">
-                        <td>${booking.date} ${booking.time}</td>
-                        <td>
-                            <div><strong>${booking.customerName}</strong></div>
-                            <div style="font-size: 0.85rem; color: var(--text-secondary);">${booking.email}</div>
-                        </td>
-                        <td>
-                            <div class="service-pills">
-                                ${serviceNames.map(name => `<span class="service-pill">${name}</span>`).join('')}
-                            </div>
-                        </td>
-                        <td>${booking.carDetails}</td>
-                        <td><strong>$${total}</strong></td>
-                        <td><span class="status-badge status-${booking.status}">${booking.status}</span></td>
-                    </tr>
-                `;
-
-                // Mobile card - make it clickable
-                mobileCardsHtml += `
-                    <div class="mobile-booking-card" onclick="showBookingDetails('${booking.id}')" style="cursor: pointer;" title="Click to view details">
-                        <div class="mobile-booking-header">
-                            <div class="mobile-booking-date">${booking.date} ${booking.time}</div>
-                            <div class="mobile-booking-status status-${booking.status}">${booking.status}</div>
-                        </div>
-                        
-                        <div class="mobile-booking-customer">
-                            <div class="mobile-booking-customer-name">${booking.customerName}</div>
-                            <div class="mobile-booking-customer-email">${booking.email}</div>
-                        </div>
-                        
-                        <div class="mobile-booking-details">
-                            <div class="mobile-booking-detail mobile-booking-services">
-                                <div class="mobile-booking-detail-label">Services</div>
-                                <div class="mobile-booking-detail-value">
-                                    <div class="service-pills">
-                                        ${serviceNames.map(name => `<span class="service-pill">${name}</span>`).join('')}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="mobile-booking-detail">
-                                <div class="mobile-booking-detail-label">Car Details</div>
-                                <div class="mobile-booking-detail-value">${booking.carDetails}</div>
-                            </div>
-                        </div>
-                        
-                        <div class="mobile-booking-total">$${total}</div>
-                    </div>
-                `;
-            });
-
-            // Handle empty data case
-            if (bookings.length === 0) {
-                tableHtml += `
-                    <tr>
-                        <td colspan="6" style="text-align: center; padding: 2rem; color: var(--text-secondary);">
-                            <div style="font-size: 1.2rem; margin-bottom: 0.5rem;">📅</div>
-                            <div>No bookings found for the selected filter</div>
-                        </td>
-                    </tr>
-                `;
-                
-                mobileCardsHtml += `
-                    <div class="mobile-booking-card" style="text-align: center; padding: 2rem; color: var(--text-secondary);">
-                        <div style="font-size: 1.2rem; margin-bottom: 0.5rem;">📅</div>
-                        <div>No bookings found for the selected filter</div>
-                    </div>
-                `;
+            console.log('renderBookingsTable called - redirecting to createUnifiedBookingTable');
+            const bookingsWidget = document.querySelector('#widget-bookings, [id*="bookings"]');
+            if (bookingsWidget) {
+                const tableContainer = document.querySelector('#table-widget-bookings, [id*="table-"][id*="bookings"]');
+                if (tableContainer) {
+                    createUnifiedBookingTable(tableContainer, bookingsWidget.id || 'widget-bookings', 'large');
+                    updateBookingListFilterStatus(bookingsWidget.id || 'widget-bookings');
+                }
             }
-
-            tableHtml += `
-                    </tbody>
-                    </table>
-                </div>
-            `;
-
-            mobileCardsHtml += `
-                </div>
-            `;
-
-            // Combine both layouts
-            const finalHtml = tableHtml + mobileCardsHtml;
-            container.innerHTML = finalHtml;
-            
         }
 
         // Filter Functions
@@ -3860,6 +5054,8 @@
                 console.log('Saving current standard layout before applying filters...');
                 savedLayout = createCurrentLayout();
             }
+            
+            // No automatic widget creation - filters only affect existing widgets
             
             const timePeriod = document.getElementById('timePeriodFilter').value;
             const status = document.getElementById('statusFilter').value;
@@ -3981,6 +5177,12 @@
             
             // Render dashboard with filtered data
             renderDashboard();
+            // Force refresh for charts to ensure no stale data remains
+            createRevenueChart();
+            if (currentView === 'full') {
+                createServicesChart();
+                createTimelineChart();
+            }
             
             // Restore saved widget positions after rendering
             if (savedLayout && savedLayout.widgets && savedLayout.widgets.length > 0) {
@@ -4034,6 +5236,8 @@
             document.getElementById('timePeriodFilter').value = '';
             document.getElementById('statusFilter').value = '';
             filteredData = { ...dashboardData };
+            
+            // No automatic widget creation - filters only affect existing widgets
             
             // Refresh calendar widget if it exists
             if (currentCalendarWidget) {
@@ -4388,7 +5592,6 @@
                 }
             }
         }
-
         // ============================================================================
         // EXPORT SECTIONS
         // ============================================================================
@@ -4581,7 +5784,7 @@
                 generate: ExportSections.addKPISection
             },
             'revenue-chart': {
-                name: 'Revenue Analysis',
+                name: 'Revenue Chart',
                 generate: ExportSections.addRevenueChart
             },
             'service-distribution': {
@@ -4802,7 +6005,13 @@
         }
 
         function exportBookings() {
-            const dataStr = JSON.stringify(filteredData.bookings, null, 2);
+            // Sort bookings by date (newest first) before exporting
+            const sortedBookings = [...filteredData.bookings].sort((a, b) => {
+                const dateTimeA = new Date(a.date.replace(/\//g, '-') + ' ' + a.time);
+                const dateTimeB = new Date(b.date.replace(/\//g, '-') + ' ' + b.time);
+                return dateTimeB - dateTimeA; // Descending order (newest first)
+            });
+            const dataStr = JSON.stringify(sortedBookings, null, 2);
             const dataBlob = new Blob([dataStr], { type: 'application/json' });
             const url = URL.createObjectURL(dataBlob);
             const link = document.createElement('a');
@@ -5158,7 +6367,6 @@
 
             return yPos + 15;
         }
-
         async function addBookingsTableSection(pdf, yPos, colors, data) {
             pdf.setFontSize(14);
             pdf.setTextColor(...colors.black);
@@ -5198,7 +6406,13 @@
             yPos += 10;
 
             // Process bookings in batches for better performance
-            const bookingsToProcess = data.bookings.slice(0, maxTotalRows);
+            // Sort bookings by date (newest first) before processing
+            const sortedBookings = [...data.bookings].sort((a, b) => {
+                const dateTimeA = new Date(a.date.replace(/\//g, '-') + ' ' + a.time);
+                const dateTimeB = new Date(b.date.replace(/\//g, '-') + ' ' + b.time);
+                return dateTimeB - dateTimeA; // Descending order (newest first)
+            });
+            const bookingsToProcess = sortedBookings.slice(0, maxTotalRows);
             pdf.setFontSize(7);
             
             for (let i = 0; i < bookingsToProcess.length; i++) {
@@ -5313,6 +6527,8 @@
 
         // Widget Management
         function addWidget(widgetType) {
+            console.log('User explicitly adding widget:', widgetType, 'to layout:', currentCustomLayout);
+            
             if (currentView !== 'custom' || !currentCustomLayout) {
                 showToast('Create a custom layout first to add widgets', 'warning');
                 closeModal('addWidgetModal');
@@ -5341,7 +6557,11 @@
                                 <div class="widget-actions no-print">
                                     <button class="widget-btn" onclick="removeWidget('${widgetId}')">🗑️</button>
                                     <button class="widget-btn" onclick="refreshWidget('${widgetId}')">🔄</button>
+                                    <button class="widget-btn" onclick="expandWidget('${widgetId.replace('widget-', '')}')" title="Toggle expand/collapse">⛶</button>
                                 </div>
+                            </div>
+                            <div class="booking-list-filter-status" id="filter-status-${widgetId}">
+                                <!-- Filter status will be displayed here -->
                             </div>
                             <div class="chart-container">
                                 <canvas id="chart-${widgetId}"></canvas>
@@ -5359,6 +6579,9 @@
                                     <button class="widget-btn" onclick="removeWidget('${widgetId}')">🗑️</button>
                                     <button class="widget-btn" onclick="refreshWidget('${widgetId}')">🔄</button>
                                 </div>
+                            </div>
+                            <div class="booking-list-filter-status" id="filter-status-${widgetId}">
+                                <!-- Filter status will be displayed here -->
                             </div>
                             <div class="chart-container">
                                 <canvas id="chart-${widgetId}"></canvas>
@@ -5476,14 +6699,18 @@
         function initializeCustomWidget(widgetId, widgetType) {
             const canvas = document.getElementById(`chart-${widgetId}`);
             const tableContainer = document.getElementById(`table-${widgetId}`);
-            const allBookingsContainer = document.getElementById(`allBookingsTable-${widgetId}`);
+            // Legacy reference removed - now handled by createUnifiedBookingTable
             const statsContainer = document.getElementById(`stats-${widgetId}`);
             const calendarContainer = document.getElementById(`calendar-content-${widgetId}`);
             
             if (canvas) {
                 const ctx = canvas.getContext('2d');
                 
-                switch(widgetType) {
+            switch(widgetType) {
+                    case 'revenue-over-time':
+                        // Legacy mapping - convert to new unified Revenue Chart
+                        console.warn('Legacy widget type "revenue-over-time" detected in widget initialization. Converting to unified "revenue-chart". Please update your layout.');
+                        // Fall through to revenue-chart case
                     case 'revenue-chart':
                         createCustomRevenueChart(ctx, widgetId);
                         break;
@@ -5568,6 +6795,9 @@
                     }
                 }
             });
+            
+            // Update filter status display
+            updateRevenueFilterStatus(widgetId);
         }
 
         function createCustomServicesChart(ctx, widgetId) {
@@ -5604,6 +6834,9 @@
                     }
                 }
             });
+            
+            // Update filter status display
+            updateServicesFilterStatus(widgetId);
         }
 
         function createCustomTimelineChart(ctx, widgetId) {
@@ -5648,7 +6881,15 @@
             // Store the current mode for this widget
             container.dataset.mode = mode;
             
-            const bookings = mode === 'small' ? filteredData.bookings.slice(0, 10) : filteredData.bookings.slice(0, undefined);
+            // Sort bookings by date and time (newest first)
+            const sortedBookings = [...filteredData.bookings].sort((a, b) => {
+                const dateTimeA = new Date(a.date.replace(/\//g, '-') + ' ' + a.time);
+                const dateTimeB = new Date(b.date.replace(/\//g, '-') + ' ' + b.time);
+                return dateTimeB - dateTimeA; // Descending order (newest first)
+            });
+            
+            const bookings = mode === 'small' ? sortedBookings.slice(0, 10) : sortedBookings;
+            const isRestricted = restrictedMode;
 
             let tableHtml = `
                 <div class="table-responsive">
@@ -5688,9 +6929,9 @@
                             <td>${booking.date} ${booking.time}</td>
                             <td>
                                 <div><strong>${booking.customerName}</strong></div>
-                                <div style="font-size: 0.85rem; color: var(--text-secondary);">${booking.email}</div>
+                                <div style="font-size: 0.85rem; color: var(--text-secondary);">${isRestricted ? '••••••••@•••••••' : booking.email}</div>
                             </td>
-                            <td><strong>$${total}</strong></td>
+                            <td><strong>${isRestricted ? '••••' : '$' + total}</strong></td>
                             <td><span class="status-badge status-${booking.status}">${booking.status}</span></td>
                         </tr>
                     `;
@@ -5701,7 +6942,7 @@
                             <td>${booking.date} ${booking.time}</td>
                             <td>
                                 <div><strong>${booking.customerName}</strong></div>
-                                <div style="font-size: 0.85rem; color: var(--text-secondary);">${booking.email}</div>
+                                <div style="font-size: 0.85rem; color: var(--text-secondary);">${isRestricted ? '••••••••@•••••••' : booking.email}</div>
                             </td>
                             <td>
                                 <div class="service-pills">
@@ -5709,7 +6950,7 @@
                                 </div>
                             </td>
                             <td>${booking.carDetails}</td>
-                            <td><strong>$${total}</strong></td>
+                            <td><strong>${isRestricted ? '••••' : '$' + total}</strong></td>
                             <td><span class="status-badge status-${booking.status}">${booking.status}</span></td>
                         </tr>
                     `;
@@ -5725,7 +6966,7 @@
                         
                         <div class="mobile-booking-customer">
                             <div class="mobile-booking-customer-name">${booking.customerName}</div>
-                            <div class="mobile-booking-customer-email">${booking.email}</div>
+                            <div class="mobile-booking-customer-email">${isRestricted ? '••••••••@•••••••' : booking.email}</div>
                         </div>
                         
                         <div class="mobile-booking-details">
@@ -5745,7 +6986,7 @@
                             ` : ''}
                         </div>
                         
-                        <div class="mobile-booking-total">$${total}</div>
+                        <div class="mobile-booking-total">${isRestricted ? '••••' : '$' + total}</div>
                     </div>
                 `;
             });
@@ -5757,7 +6998,7 @@
                     <tr>
                         <td colspan="${colspan}" style="text-align: center; padding: 2rem; color: var(--text-secondary);">
                             <div style="font-size: 1.2rem; margin-bottom: 0.5rem;">📅</div>
-                            <div>No bookings found for the selected filter</div>
+                            <div>No data available for ${getCurrentPeriodLabel(getCurrentFilters())}.</div>
                         </td>
                     </tr>
                 `;
@@ -5765,7 +7006,7 @@
                 mobileCardsHtml += `
                     <div class="mobile-booking-card" style="text-align: center; padding: 2rem; color: var(--text-secondary);">
                         <div style="font-size: 1.2rem; margin-bottom: 0.5rem;">📅</div>
-                        <div>No bookings found for the selected filter</div>
+                        <div>No data available for ${getCurrentPeriodLabel(getCurrentFilters())}.</div>
                     </div>
                 `;
             }
@@ -5783,6 +7024,18 @@
             // Combine both layouts
             const finalHtml = tableHtml + mobileCardsHtml;
             container.innerHTML = finalHtml;
+            
+            // Enforce immediate masking in Restricted Mode without requiring a separate refresh
+            if (restrictedMode) {
+                // Mask any totals that slipped through due to dynamic DOM updates
+                container.querySelectorAll('td strong, .mobile-booking-total').forEach(el => {
+                    const text = el.textContent || '';
+                    if (/\$/.test(text)) {
+                        el.textContent = '••••';
+                        el.classList.add('restricted-hidden');
+                    }
+                });
+            }
         }
 
         function renderCustomBookingsTable(container) {
@@ -5790,154 +7043,34 @@
             createCustomBookingTable(container, 'default');
         }
 
-        function renderBookingsTableForWidget(container, widgetId) {
-            if (!container) return;
-
-            const bookings = filteredData.bookings.slice(0, undefined);
-
-            let tableHtml = `
-                <div class="table-responsive">
-                    <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Customer</th>
-                            <th>Services</th>
-                            <th>Car</th>
-                            <th>Total</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-            `;
-
-            let mobileCardsHtml = `
-                <div class="mobile-booking-cards">
-            `;
-
-            bookings.forEach(booking => {
-                let total = 0;
-                const serviceNames = booking.services.map(serviceId => {
-                    const service = filteredData.settings.serviceTypes[serviceId];
-                    if (service) {
-                        total += service.price;
-                        return service.name;
-                    }
-                    return serviceId;
-                });
-
-                // Desktop table row - make it clickable
-                tableHtml += `
-                    <tr onclick="showBookingDetails('${booking.id}')" style="cursor: pointer;" title="Click to view details">
-                        <td>${booking.date} ${booking.time}</td>
-                        <td>
-                            <div><strong>${booking.customerName}</strong></div>
-                            <div style="font-size: 0.85rem; color: var(--text-secondary);">${booking.email}</div>
-                        </td>
-                        <td>
-                            <div class="service-pills">
-                                ${serviceNames.map(name => `<span class="service-pill">${name}</span>`).join('')}
-                            </div>
-                        </td>
-                        <td>${booking.carDetails}</td>
-                        <td><strong>$${total}</strong></td>
-                        <td><span class="status-badge status-${booking.status}">${booking.status}</span></td>
-                    </tr>
-                `;
-
-                // Mobile card - make it clickable
-                mobileCardsHtml += `
-                    <div class="mobile-booking-card" onclick="showBookingDetails('${booking.id}')" style="cursor: pointer;" title="Click to view details">
-                        <div class="mobile-booking-header">
-                            <div class="mobile-booking-date">${booking.date} ${booking.time}</div>
-                            <div class="mobile-booking-status status-${booking.status}">${booking.status}</div>
-                        </div>
-                        
-                        <div class="mobile-booking-customer">
-                            <div class="mobile-booking-customer-name">${booking.customerName}</div>
-                            <div class="mobile-booking-customer-email">${booking.email}</div>
-                        </div>
-                        
-                        <div class="mobile-booking-details">
-                            <div class="mobile-booking-detail mobile-booking-services">
-                                <div class="mobile-booking-detail-label">Services</div>
-                                <div class="mobile-booking-detail-value">
-                                    <div class="service-pills">
-                                        ${serviceNames.map(name => `<span class="service-pill">${name}</span>`).join('')}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="mobile-booking-detail">
-                                <div class="mobile-booking-detail-label">Car Details</div>
-                                <div class="mobile-booking-detail-value">${booking.carDetails}</div>
-                            </div>
-                        </div>
-                        
-                        <div class="mobile-booking-total">$${total}</div>
-                    </div>
-                `;
-            });
-
-            // Handle empty data case
-            if (bookings.length === 0) {
-                tableHtml += `
-                    <tr>
-                        <td colspan="6" style="text-align: center; padding: 2rem; color: var(--text-secondary);">
-                            <div style="font-size: 1.2rem; margin-bottom: 0.5rem;">📅</div>
-                            <div>No bookings found for the selected filter</div>
-                        </td>
-                    </tr>
-                `;
-                
-                mobileCardsHtml += `
-                    <div class="mobile-booking-card" style="text-align: center; padding: 2rem; color: var(--text-secondary);">
-                        <div style="font-size: 1.2rem; margin-bottom: 0.5rem;">📅</div>
-                        <div>No bookings found for the selected filter</div>
-                    </div>
-                `;
-            }
-
-            tableHtml += `
-                    </tbody>
-                    </table>
-                </div>
-            `;
-
-            mobileCardsHtml += `
-                </div>
-            `;
-
-            // Combine both layouts
-            const finalHtml = tableHtml + mobileCardsHtml;
-            container.innerHTML = finalHtml;
-        }
+        // Legacy function removed - now handled by createUnifiedBookingTable
 
         function renderCustomStats(container) {
             const services = filteredData.settings.serviceTypes;
             const totalServices = Object.keys(services).length;
             const avgPrice = totalServices > 0 ? Object.values(services).reduce((sum, s) => sum + s.price, 0) / totalServices : 0;
             const maxAppointments = filteredData.settings.maxAppointmentsPerDay;
+            const isRestricted = restrictedMode;
 
             container.innerHTML = `
                 <div class="stat-item">
                     <div class="stat-label">Available Services</div>
-                    <div class="stat-value">${totalServices}</div>
+                    <div class="stat-value">${isRestricted ? '••••' : totalServices}</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-label">Avg Service Price</div>
-                    <div class="stat-value">$${avgPrice.toFixed(2)}</div>
+                    <div class="stat-value">${isRestricted ? '••••' : '$' + avgPrice.toFixed(2)}</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-label">Max Daily Appointments</div>
-                    <div class="stat-value">${maxAppointments}</div>
+                    <div class="stat-value">${isRestricted ? '••••' : maxAppointments}</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-label">Time Slots</div>
-                    <div class="stat-value">${filteredData.settings.availableTimeSlots.length}</div>
+                    <div class="stat-value">${isRestricted ? '••••' : filteredData.settings.availableTimeSlots.length}</div>
                 </div>
             `;
         }
-
         function removeWidget(widgetId) {
             const widget = document.getElementById(widgetId);
             if (widget) {
@@ -5946,24 +7079,29 @@
                 triggerAutoSave(); // Auto-save when widget is removed
                 showToast('Widget removed', 'success');
                 
-                // Check if we need to remove Add Widget widget when no regular widgets remain
+                // In custom layouts, always ensure Add Widget placeholder remains
                 setTimeout(() => {
-                    const grid = document.getElementById('dashboardGrid');
-                    const remainingWidgets = grid.querySelectorAll('.widget');
-                    const regularWidgets = Array.from(remainingWidgets).filter(w => 
-                        !w.querySelector('.add-widget-widget')
-                    );
-                    
-                    // If no regular widgets remain, remove Add Widget widget
-                    if (regularWidgets.length === 0) {
-                        const addWidgetWidget = grid.querySelector('.add-widget-widget');
-                        if (addWidgetWidget) {
-                            addWidgetWidget.closest('.widget').remove();
-                            saveCurrentCustomLayout();
-                            triggerAutoSave();
-                            
-                            // Update mobile UI
-                            updateMobileUI();
+                    if (currentView === 'custom' && currentCustomLayout) {
+                        ensureAddWidgetPlaceholder();
+                    } else {
+                        // Only in non-custom views, check if we need to remove Add Widget widget when no regular widgets remain
+                        const grid = document.getElementById('dashboardGrid');
+                        const remainingWidgets = grid.querySelectorAll('.widget');
+                        const regularWidgets = Array.from(remainingWidgets).filter(w => 
+                            !w.querySelector('.add-widget-widget')
+                        );
+                        
+                        // If no regular widgets remain, remove Add Widget widget
+                        if (regularWidgets.length === 0) {
+                            const addWidgetWidget = grid.querySelector('.add-widget-widget');
+                            if (addWidgetWidget) {
+                                addWidgetWidget.closest('.widget').remove();
+                                saveCurrentCustomLayout();
+                                triggerAutoSave();
+                                
+                                // Update mobile UI
+                                updateMobileUI();
+                            }
                         }
                     }
                 }, 100);
@@ -5987,25 +7125,77 @@
             }
         }
 
+        function setWidgetRefreshing(widgetId, isRefreshing) {
+            const el = document.getElementById(widgetId);
+            if (el) {
+                el.classList.toggle('refreshing', isRefreshing);
+            }
+        }
+
         function refreshWidget(widgetId) {
             showToast(`Refreshing ${widgetId}...`, 'info');
+            const fullWidgetId = widgetId.startsWith('widget-') ? widgetId : `widget-${widgetId}`;
+            setWidgetRefreshing(fullWidgetId, true);
+            
+            // No automatic widget preservation - only refresh existing widgets
             
             // Handle specific widget refreshes
-            if (widgetId === 'all-bookings') {
-                // Refresh only the All Bookings widget
-                const container = document.getElementById('allBookingsTable');
-                if (container) {
-                    renderBookingsTable();
-                    updateBookingListFilterStatus('all-bookings');
+            if (widgetId === 'revenue' || /revenue/.test(widgetId)) {
+                // Refresh Revenue Chart
+                if (widgetId === 'revenue') {
+                    // Main dashboard revenue widget
+                    const container = document.querySelector('#widget-revenue .chart-container');
+                    if (container) {
+                        // Recreate canvas to guarantee fresh Chart.js animation
+                        container.innerHTML = '<canvas id="revenueChart"></canvas>';
+                        requestAnimationFrame(() => {
+                            createRevenueChart();
+                            updateRevenueFilterStatus('widget-revenue');
+                        });
+                    } else {
+                        createRevenueChart();
+                        updateRevenueFilterStatus('widget-revenue');
+                    }
+                } else {
+                    // Custom revenue widget
+                    const canvas = document.getElementById(`chart-${widgetId}`);
+                    if (canvas) {
+                        const container = canvas.parentElement;
+                        if (container) {
+                            container.innerHTML = `<canvas id="chart-${widgetId}"></canvas>`;
+                            const newCanvas = document.getElementById(`chart-${widgetId}`);
+                            requestAnimationFrame(() => {
+                                const ctx = newCanvas.getContext('2d');
+                                createCustomRevenueChart(ctx, widgetId);
+                                updateRevenueFilterStatus(widgetId);
+                            });
+                        } else {
+                            const ctx = canvas.getContext('2d');
+                            createCustomRevenueChart(ctx, widgetId);
+                            updateRevenueFilterStatus(widgetId);
+                        }
+                    }
                 }
+                if (restrictedMode) enableRestrictedMode();
+                setTimeout(() => setWidgetRefreshing(fullWidgetId, false), 1100);
                 return;
-            } else if (widgetId === 'bookings') {
-                // Legacy support for old bookings widget ID
-                const container = document.getElementById('allBookingsTable');
-                if (container) {
-                    renderBookingsTable();
-                    updateBookingListFilterStatus('all-bookings');
+            } else if (widgetId === 'bookings' || widgetId === 'all-bookings') {
+                // Refresh Bookings widget (unified)
+                const bookingsWidget = document.querySelector('#widget-bookings, [id*="bookings"]');
+                if (bookingsWidget) {
+                    const tableContainer = document.querySelector('#table-widget-bookings, [id*="table-"][id*="bookings"]');
+                    if (tableContainer) {
+                        const currentMode = tableContainer.dataset.mode || 'large';
+                        const widgetIdForRefresh = bookingsWidget.id || 'widget-bookings';
+                        createUnifiedBookingTable(tableContainer, widgetIdForRefresh, currentMode);
+                        updateBookingListFilterStatus(widgetIdForRefresh);
+                    }
                 }
+                // Apply Restricted Mode after refresh
+                if (restrictedMode) {
+                    enableRestrictedMode();
+                }
+                setTimeout(() => setWidgetRefreshing(fullWidgetId, false), 500);
                 return;
             } else if (widgetId.includes('bookings')) {
                 // Refresh unified booking widget
@@ -6015,26 +7205,233 @@
                     createUnifiedBookingTable(tableContainer, widgetId, currentMode);
                     updateBookingListFilterStatus(widgetId);
                 }
+                // Apply Restricted Mode after refresh
+                if (restrictedMode) {
+                    enableRestrictedMode();
+                }
+                setTimeout(() => setWidgetRefreshing(fullWidgetId, false), 500);
                 return;
             } else if (widgetId === 'timeline') {
                 // Refresh timeline widget
-                createTimelineChart();
+                const container = document.querySelector('#widget-timeline .chart-container');
+                if (container) {
+                    container.innerHTML = '<canvas id="timelineChart"></canvas>';
+                    requestAnimationFrame(() => {
+                        createTimelineChart();
+                    });
+                } else {
+                    createTimelineChart();
+                }
+                // Apply Restricted Mode after refresh
+                if (restrictedMode) {
+                    enableRestrictedMode();
+                }
+                setTimeout(() => setWidgetRefreshing(fullWidgetId, false), 1100);
+                return;
+            } else if (widgetId === 'stats' || /stats/.test(widgetId)) {
+                // Refresh Stats widget
+                if (widgetId === 'stats') {
+                    // Main dashboard stats widget
+                    renderStats();
+                } else {
+                    // Custom stats widget
+                    const statsContainer = document.getElementById(`stats-${widgetId}`);
+                    if (statsContainer) {
+                        renderCustomStats(statsContainer);
+                    }
+                }
+                // Apply Restricted Mode after refresh
+                if (restrictedMode) {
+                    enableRestrictedMode();
+                }
+                setTimeout(() => setWidgetRefreshing(fullWidgetId, false), 500);
+                return;
+            } else if (widgetId === 'services' || /service/.test(widgetId)) {
+                // Refresh Service Distribution widget
+                if (widgetId === 'services') {
+                    // Main dashboard services widget
+                    const container = document.querySelector('#widget-services .chart-container');
+                    if (container) {
+                        container.innerHTML = '<canvas id="servicesChart"></canvas>';
+                        requestAnimationFrame(() => {
+                            createServicesChart();
+                            updateServicesFilterStatus('widget-services');
+                        });
+                    } else {
+                        createServicesChart();
+                        updateServicesFilterStatus('widget-services');
+                    }
+                } else {
+                    // Custom services widget
+                    const canvas = document.getElementById(`chart-${widgetId}`);
+                    if (canvas) {
+                        const container = canvas.parentElement;
+                        if (container) {
+                            container.innerHTML = `<canvas id="chart-${widgetId}"></canvas>`;
+                            const newCanvas = document.getElementById(`chart-${widgetId}`);
+                            requestAnimationFrame(() => {
+                                const ctx = newCanvas.getContext('2d');
+                                createCustomServicesChart(ctx, widgetId);
+                                updateServicesFilterStatus(widgetId);
+                            });
+                        } else {
+                            const ctx = canvas.getContext('2d');
+                            createCustomServicesChart(ctx, widgetId);
+                            updateServicesFilterStatus(widgetId);
+                        }
+                    }
+                }
+                // Apply Restricted Mode after refresh
+                if (restrictedMode) {
+                    enableRestrictedMode();
+                }
+                setTimeout(() => setWidgetRefreshing(fullWidgetId, false), 1100);
                 return;
             }
             
-            // Default behavior for other widgets
+            // Default behavior for other widgets (should rarely be used now)
+            console.warn(`No specific refresh handler for widget: ${widgetId}. Falling back to full dashboard refresh.`);
             renderDashboard();
+            
+            // No automatic widget restoration - widgets must be explicitly added via Add Widget
+            
+            // Apply Restricted Mode after refresh
+            if (restrictedMode) {
+                enableRestrictedMode();
+            }
+            setWidgetRefreshing(fullWidgetId, false);
         }
 
         function expandWidget(widgetId) {
-            const widget = document.getElementById(`widget-${widgetId}`);
-            if (widget.classList.contains('widget-full')) {
+            // Handle both formats: 'revenue' -> 'widget-revenue' and full widget IDs
+            const fullWidgetId = widgetId.startsWith('widget-') ? widgetId : `widget-${widgetId}`;
+            const widget = document.getElementById(fullWidgetId);
+            
+            if (!widget) {
+                console.warn('Widget not found for expand/collapse:', fullWidgetId);
+                return;
+            }
+            
+            const isExpanded = widget.classList.contains('widget-full');
+            
+            if (isExpanded) {
                 widget.classList.remove('widget-full');
                 widget.classList.add('widget-medium');
             } else {
                 widget.classList.remove('widget-medium');
                 widget.classList.add('widget-full');
             }
+            
+            // Save widget state to localStorage for persistence
+            const widgetState = JSON.parse(localStorage.getItem('widgetStates') || '{}');
+            widgetState[fullWidgetId] = {
+                expanded: !isExpanded,
+                lastUpdated: Date.now()
+            };
+            localStorage.setItem('widgetStates', JSON.stringify(widgetState));
+            
+            // Save to layout customizations for persistence across layout switches
+            if (currentView === 'custom' && currentCustomLayout) {
+                saveCurrentCustomLayout();
+            }
+        }
+        
+        function restoreWidgetStates() {
+            const widgetState = JSON.parse(localStorage.getItem('widgetStates') || '{}');
+            
+            Object.keys(widgetState).forEach(widgetId => {
+                const state = widgetState[widgetId];
+                const widget = document.getElementById(widgetId);
+                
+                if (widget && state.expanded) {
+                    widget.classList.remove('widget-medium');
+                    widget.classList.add('widget-full');
+                }
+            });
+        }
+        
+        function saveAllWidgetStates() {
+            const allWidgetStates = {};
+            
+            // Save expand/collapse states for all widgets
+            document.querySelectorAll('.widget').forEach(widget => {
+                const isExpanded = widget.classList.contains('widget-full');
+                if (isExpanded) {
+                    allWidgetStates[widget.id] = {
+                        expanded: true,
+                        lastUpdated: Date.now()
+                    };
+                }
+            });
+            
+            // Save booking widget states
+            document.querySelectorAll('[id*="bookings"]').forEach(widget => {
+                const tableContainer = document.getElementById(`table-${widget.id}`);
+                if (tableContainer && tableContainer.dataset.mode) {
+                    saveBookingWidgetState(widget.id, tableContainer.dataset.mode);
+                }
+            });
+            
+            localStorage.setItem('widgetStates', JSON.stringify(allWidgetStates));
+        }
+        
+        function refreshDataContent() {
+            // Save current widget states before any refresh
+            saveAllWidgetStates();
+            
+            // Always refresh KPI cards regardless of view
+            const kpis = calculateKPIs(filteredData);
+            const currentFilters = getCurrentFilters();
+            const improvements = calculateImprovements(filteredData, currentFilters);
+            renderKPIs(kpis, improvements, currentFilters);
+            
+            // Refresh individual widgets without rebuilding the entire dashboard
+            if (currentView === 'full') {
+                // Refresh full view widgets
+                createRevenueChart();
+                createServicesChart();
+                createTimelineChart();
+                renderStats();
+                
+                // Refresh bookings widget while preserving its size
+                const bookingsTable = document.getElementById('table-widget-bookings');
+                if (bookingsTable) {
+                    const currentMode = bookingsTable.dataset.mode || 'large';
+                    createUnifiedBookingTable(bookingsTable, 'widget-bookings', currentMode);
+                    updateBookingListFilterStatus('widget-bookings');
+                }
+            } else if (currentView === 'custom' && currentCustomLayout) {
+                // Refresh custom layout widgets
+                const savedWidgets = JSON.parse(localStorage.getItem(`customLayout_${currentCustomLayout}`) || '[]');
+                
+                savedWidgets.forEach(widgetData => {
+                    const widgetId = widgetData.id;
+                    
+                    // Refresh bookings widgets
+                    if (widgetData.type === 'bookings' || widgetData.type === 'all-bookings') {
+                        const tableContainer = document.getElementById(`table-${widgetId}`);
+                        if (tableContainer) {
+                            const currentMode = tableContainer.dataset.mode || 'large';
+                            createUnifiedBookingTable(tableContainer, widgetId, currentMode);
+                            updateBookingListFilterStatus(widgetId);
+                        }
+                    }
+                    
+                    // Refresh stats widgets
+                    if (widgetData.type === 'stats') {
+                        const statsContainer = document.getElementById(`stats-${widgetId}`);
+                        if (statsContainer) {
+                            renderCustomStats(statsContainer);
+                        }
+                    }
+                    
+                    // Refresh other widget types
+                    initializeCustomWidget(widgetId, widgetData.type);
+                });
+            }
+            
+            // Restore widget states after refresh
+            restoreWidgetStates();
         }
 
         function toggleBookingWidgetMode(widgetId) {
@@ -6061,6 +7458,11 @@
             
             // Save the size state to localStorage
             saveBookingWidgetState(widgetId, newMode);
+            
+            // Save to layout customizations for persistence across layout switches
+            if (currentView === 'custom' && currentCustomLayout) {
+                saveCurrentCustomLayout();
+            }
             
             // Show toast notification
             const modeText = newMode === 'large' ? 'expanded' : 'collapsed';
@@ -6117,6 +7519,45 @@
                 console.log('Auto-added Add Widget widget at the end');
             }
         }
+        
+        // Ensure Add Widget placeholder is always present in custom layouts
+        function ensureAddWidgetPlaceholder() {
+            // Only show in custom layouts, not in full view or default view
+            if (currentView !== 'custom' || !currentCustomLayout) {
+                return;
+            }
+            
+            const grid = document.getElementById('dashboardGrid');
+            if (!grid) return;
+            
+            // Check if there's already an Add Widget widget
+            const existingAddWidget = grid.querySelector('.add-widget-widget');
+            if (existingAddWidget) {
+                console.log('Add Widget placeholder already exists');
+                return;
+            }
+            
+            // Create the Add Widget placeholder
+            const addWidgetId = `add-widget-${Date.now()}`;
+            const addWidgetHTML = `
+                <div class="widget widget-medium" id="${addWidgetId}">
+                    <div class="add-widget-widget" onclick="openModal('addWidgetModal')" title="Add Widget">
+                        <span class="add-widget-icon">➕</span>
+                    </div>
+                </div>
+            `;
+            
+            // Always append to the end of the grid
+            grid.insertAdjacentHTML('beforeend', addWidgetHTML);
+            
+            // Initialize draggable widgets to include the new placeholder
+            initializeDraggableWidgets();
+            
+            // Update mobile UI
+            updateMobileUI();
+            
+            console.log('Add Widget placeholder re-injected for layout:', currentCustomLayout);
+        }
 
         // Enhanced Layout Management with multiple storage options
         function saveLayout() {
@@ -6154,11 +7595,26 @@
         }
 
         function getWidgetCustomizations(widget) {
-            return {
+            const customizations = {
                 backgroundColor: getComputedStyle(widget).backgroundColor,
                 borderColor: getComputedStyle(widget).borderColor,
                 customCSS: widget.getAttribute('data-custom-css') || ''
             };
+            
+            // Save booking widget mode if it's a bookings widget
+            if (widget.id.includes('bookings')) {
+                const tableContainer = document.getElementById(`table-${widget.id}`);
+                if (tableContainer && tableContainer.dataset.mode) {
+                    customizations.bookingMode = tableContainer.dataset.mode;
+                }
+            }
+            
+            // Save expand state for revenue widgets
+            if (widget.id.includes('revenue') || widget.classList.contains('widget-full')) {
+                customizations.expanded = widget.classList.contains('widget-full');
+            }
+            
+            return customizations;
         }
 
         // Enhanced localStorage with compression and error handling
@@ -6233,7 +7689,10 @@
 
         function getWidgetType(widget) {
             // Check widget ID first for more reliable identification
-            if (widget.id === 'widget-all-bookings') return 'all-bookings';
+            if (widget.id === 'widget-all-bookings' || widget.id === 'widget-bookings') {
+                console.log('Mapping All Bookings to Bookings widget type');
+                return 'bookings';
+            }
             if (widget.id === 'widget-timeline') return 'timeline';
             if (widget.id === 'widget-revenue') return 'revenue-chart';
             if (widget.id === 'widget-services') return 'service-distribution';
@@ -6248,7 +7707,10 @@
                 if (titleText.includes('revenue')) return 'revenue-chart';
                 if (titleText.includes('service')) return 'service-distribution';
                 if (titleText.includes('booking calendar')) return 'calendar';
-                if (titleText.includes('all bookings')) return 'all-bookings';
+                if (titleText.includes('all bookings') || titleText.includes('bookings')) {
+                    console.log('Mapping All Bookings/Bookings title to Bookings widget type');
+                    return 'bookings';
+                }
                 if (titleText.includes('booking') && !titleText.includes('calendar')) return 'booking-list';
                 if (titleText.includes('calendar')) return 'calendar';
                 if (titleText.includes('stats')) return 'stats';
@@ -6269,7 +7731,7 @@
                 ...layout,
                 exportInfo: {
                     exportedAt: new Date().toISOString(),
-                    dashboardVersion: 'V0.1',
+                    dashboardVersion: 'V0.9beta',
                     projectName: 'Venus DASH',
                     description: 'Custom dashboard layout export'
                 }
@@ -6470,7 +7932,7 @@
                         migratedAt: new Date().toISOString(),
                         userAgent: navigator.userAgent,
                         screenResolution: `${screen.width}x${screen.height}`,
-                        savedBy: 'Venus Dashboard V0.1'
+                        savedBy: 'Venus Dashboard V0.9beta'
                     }
                 };
                 
@@ -6565,10 +8027,9 @@
                 };
             });
         }
-
-
         function renderCustomLayout(savedWidgets) {
             const grid = document.getElementById('dashboardGrid');
+            console.log('Rendering custom layout with widgets:', savedWidgets.map(w => w.type).join(', '), 'for layout:', currentCustomLayout);
             
             if (savedWidgets.length === 0) {
                 // Show empty state
@@ -6590,6 +8051,9 @@
             // Clear grid
             grid.innerHTML = '';
             
+            // Always ensure All Bookings widget is present in custom layouts
+            let hasAllBookingsWidget = false;
+            
             // Recreate widgets in saved order
             savedWidgets.forEach(widgetData => {
                 let widgetHTML = '';
@@ -6605,21 +8069,94 @@
                     console.log('Preserving widget ID:', widgetId, 'for layout:', currentCustomLayout);
                 }
                 
+                // Check if this is a Bookings widget (including legacy All Bookings)
+                if (widgetId === 'widget-all-bookings' || widgetId === 'widget-bookings' || 
+                    widgetData.type === 'all-bookings' || widgetData.type === 'bookings') {
+                    hasAllBookingsWidget = true;
+                }
+                
                 switch(widgetData.type) {
-                    case 'revenue-chart':
+                    case 'revenue-over-time':
+                        // Legacy mapping - convert to new unified Revenue Chart
+                        console.warn('Legacy widget type "revenue-over-time" detected. Converting to unified "revenue-chart". Please update your layout.');
+                        widgetData.type = 'revenue-chart';
+                        // Determine initial size based on saved state for legacy widget
+                        let legacyRevenueSizeClass = 'widget-medium';
+                        if (widgetData.customizations && widgetData.customizations.expanded) {
+                            legacyRevenueSizeClass = 'widget-full';
+                        }
+                        
                         widgetHTML = `
-                            <div class="widget widget-medium" id="${widgetId}">
+                            <div class="widget ${legacyRevenueSizeClass}" id="${widgetId}">
                                 <div class="widget-header">
                                     <h3 class="widget-title">Revenue Chart</h3>
                                     <div class="widget-actions no-print">
                                         <button class="widget-btn" onclick="removeWidget('${widgetId}')">🗑️</button>
                                         <button class="widget-btn" onclick="refreshWidget('${widgetId}')">🔄</button>
+                                        <button class="widget-btn" onclick="expandWidget('${widgetId.replace('widget-', '')}')" title="Toggle expand/collapse">⛶</button>
                                     </div>
                                 </div>
                                 <div class="chart-container">
                                     <canvas id="chart-${widgetId}"></canvas>
                                 </div>
                                 <div class="resize-handle"></div>
+                            </div>
+                        `;
+                        break;
+                        // Fall through to revenue-chart case
+                    case 'revenue-chart':
+                        // Determine initial size based on saved state
+                        let revenueSizeClass = 'widget-medium';
+                        if (widgetData.customizations && widgetData.customizations.expanded) {
+                            revenueSizeClass = 'widget-full';
+                        }
+                        
+                        widgetHTML = `
+                            <div class="widget ${revenueSizeClass}" id="${widgetId}">
+                                <div class="widget-header">
+                                    <h3 class="widget-title">Revenue Chart</h3>
+                                    <div class="widget-actions no-print">
+                                        <button class="widget-btn" onclick="removeWidget('${widgetId}')">🗑️</button>
+                                        <button class="widget-btn" onclick="refreshWidget('${widgetId}')">🔄</button>
+                                        <button class="widget-btn" onclick="expandWidget('${widgetId.replace('widget-', '')}')" title="Toggle expand/collapse">⛶</button>
+                                    </div>
+                                </div>
+                                <div class="booking-list-filter-status" id="filter-status-${widgetId}">
+                                    <!-- Filter status will be displayed here -->
+                                </div>
+                                <div class="chart-container">
+                                    <canvas id="chart-${widgetId}"></canvas>
+                                </div>
+                                <div class="resize-handle"></div>
+                            </div>
+                        `;
+                        break;
+                    case 'all-bookings':
+                        // Legacy All Bookings - map to unified Bookings widget
+                        console.log('Converting legacy All Bookings to unified Bookings widget');
+                        let legacyMode = 'large';
+                        if (widgetData.customizations && widgetData.customizations.bookingMode) {
+                            legacyMode = widgetData.customizations.bookingMode;
+                        } else {
+                            // Fallback to localStorage state
+                            legacyMode = loadBookingWidgetState(widgetId);
+                        }
+                        const legacySizeClass = legacyMode === 'large' ? 'widget-full' : 'widget-medium';
+                        
+                        widgetHTML = `
+                            <div class="widget ${legacySizeClass}" id="${widgetId}">
+                                <div class="widget-header">
+                                    <h3 class="widget-title">Bookings</h3>
+                                    <div class="widget-actions no-print">
+                                        <button class="widget-btn" onclick="toggleBookingWidgetMode('${widgetId}')" title="Toggle view mode">⛶</button>
+                                        <button class="widget-btn" onclick="removeWidget('${widgetId}')">🗑️</button>
+                                        <button class="widget-btn" onclick="refreshWidget('${widgetId}')">🔄</button>
+                                    </div>
+                                </div>
+                                <div class="booking-list-filter-status" id="booking-list-filter-status-${widgetId}">
+                                    <!-- Filter status will be displayed here -->
+                                </div>
+                                <div id="table-${widgetId}"></div>
                             </div>
                         `;
                         break;
@@ -6632,6 +8169,9 @@
                                         <button class="widget-btn" onclick="removeWidget('${widgetId}')">🗑️</button>
                                         <button class="widget-btn" onclick="refreshWidget('${widgetId}')">🔄</button>
                                     </div>
+                                </div>
+                                <div class="booking-list-filter-status" id="filter-status-${widgetId}">
+                                    <!-- Filter status will be displayed here -->
                                 </div>
                                 <div class="chart-container">
                                     <canvas id="chart-${widgetId}"></canvas>
@@ -6651,7 +8191,14 @@
                         break;
                     case 'bookings':
                         // Determine initial size based on saved state
-                        const initialMode = loadBookingWidgetState(widgetId);
+                        // First check if we have customizations with booking mode
+                        let initialMode = 'large';
+                        if (widgetData.customizations && widgetData.customizations.bookingMode) {
+                            initialMode = widgetData.customizations.bookingMode;
+                        } else {
+                            // Fallback to localStorage state
+                            initialMode = loadBookingWidgetState(widgetId);
+                        }
                         const initialSizeClass = initialMode === 'large' ? 'widget-full' : 'widget-medium';
                         
                         widgetHTML = `
@@ -6757,6 +8304,9 @@
                 }
             });
             
+            // Layout isolation: Only render widgets defined in the layout JSON
+            // No automatic widget insertion - users must explicitly add widgets via Add Widget
+            
             // Initialize all widgets with robust DOM readiness check
             const widgetPromises = savedWidgets.map(widgetData => {
                 const widgetId = widgetData.id;
@@ -6769,7 +8319,33 @@
                     const widgetId = widgetData.id;
                     initializeCustomWidget(widgetId, widgetData.type);
                 });
+                
+                // Initialize any Bookings widgets that are explicitly defined in the layout
+                savedWidgets.forEach(widgetData => {
+                    if (widgetData.type === 'bookings' || widgetData.type === 'all-bookings') {
+                        const widgetId = widgetData.id;
+                        const tableContainer = document.getElementById(`table-${widgetId}`);
+                        if (tableContainer) {
+                            const savedMode = loadBookingWidgetState(widgetId);
+                            createUnifiedBookingTable(tableContainer, widgetId, savedMode);
+                            updateBookingListFilterStatus(widgetId);
+                            console.log('Initialized Bookings widget:', widgetId, 'from layout definition');
+                        }
+                    }
+                });
+                
                 initializeDraggableWidgets();
+                
+                // Apply Restricted Mode if active
+                if (restrictedMode) {
+                    enableRestrictedMode();
+                }
+                
+                // Restore widget states (expanded/collapsed)
+                restoreWidgetStates();
+                
+                // Ensure Add Widget placeholder is always present in custom layouts
+                ensureAddWidgetPlaceholder();
             }).catch(() => {
                 // Fallback to setTimeout if Promise approach fails
                 setTimeout(() => {
@@ -6777,7 +8353,33 @@
                         const widgetId = widgetData.id;
                         initializeCustomWidget(widgetId, widgetData.type);
                     });
+                    
+                    // Initialize any Bookings widgets that are explicitly defined in the layout
+                    savedWidgets.forEach(widgetData => {
+                        if (widgetData.type === 'bookings' || widgetData.type === 'all-bookings') {
+                            const widgetId = widgetData.id;
+                            const tableContainer = document.getElementById(`table-${widgetId}`);
+                            if (tableContainer) {
+                                const savedMode = loadBookingWidgetState(widgetId);
+                                createUnifiedBookingTable(tableContainer, widgetId, savedMode);
+                                updateBookingListFilterStatus(widgetId);
+                                console.log('Initialized Bookings widget:', widgetId, 'from layout definition (fallback)');
+                            }
+                        }
+                    });
+                    
                     initializeDraggableWidgets();
+                    
+                    // Apply Restricted Mode if active
+                    if (restrictedMode) {
+                        enableRestrictedMode();
+                    }
+                    
+                    // Restore widget states (expanded/collapsed)
+                    restoreWidgetStates();
+                    
+                    // Ensure Add Widget placeholder is always present in custom layouts
+                    ensureAddWidgetPlaceholder();
                 }, 300);
             });
         }
@@ -6820,8 +8422,8 @@
 
         // Add draggable attribute to widget headers
         function makeWidgetsDraggable() {
-            // Temporarily disable mobile detection for testing - enable drag-and-drop on all devices
-            const isMobile = false; // window.innerWidth <= 768 && ('ontouchstart' in window || navigator.maxTouchPoints > 0);
+            // Enable mobile detection - disable drag-and-drop on mobile/touch devices
+            const isMobile = window.innerWidth <= 768 && ('ontouchstart' in window || navigator.maxTouchPoints > 0);
             
             console.log('makeWidgetsDraggable called:', {
                 windowWidth: window.innerWidth,
@@ -7265,6 +8867,72 @@
             
             showToast('Test save completed - check console', 'info');
         }
+        
+        // Test function to debug restricted mode functionality
+        function testRestrictedMode() {
+            console.log('=== TEST RESTRICTED MODE ===');
+            console.log('Current restricted mode:', restrictedMode);
+            console.log('KPI Grid element:', document.getElementById('kpiGrid'));
+            console.log('KPI values:', document.querySelectorAll('.kpi-value'));
+            console.log('Restricted widgets:', document.querySelectorAll('.restricted-widget'));
+            console.log('Registered listeners:', restrictedModeListeners.length);
+            
+            // Test toggling restricted mode
+            if (restrictedMode) {
+                console.log('Testing unlock...');
+                restrictedMode = false;
+                disableRestrictedMode();
+            } else {
+                console.log('Testing lock...');
+                restrictedMode = true;
+                enableRestrictedMode();
+            }
+            
+            showToast('Restricted mode test completed - check console', 'info');
+        }
+        
+        // Test function to debug improvement calculations
+        function testImprovements() {
+            console.log('=== TEST IMPROVEMENT CALCULATIONS ===');
+            console.log('Current filters:', getCurrentFilters());
+            console.log('Filtered data bookings:', filteredData?.bookings?.length);
+            
+            const currentFilters = getCurrentFilters();
+            const improvements = calculateImprovements(filteredData, currentFilters);
+            console.log('Calculated improvements:', improvements);
+            
+            // Check for duplicate improvement lines
+            const kpiTrends = document.querySelectorAll('.kpi-trend');
+            const kpiImprovements = document.querySelectorAll('.kpi-improvement');
+            console.log('KPI trend elements:', kpiTrends.length);
+            console.log('KPI improvement elements (should be 0):', kpiImprovements.length);
+            
+            if (kpiImprovements.length > 0) {
+                console.warn('⚠️ DUPLICATE IMPROVEMENT LINES DETECTED!');
+            } else {
+                console.log('✅ No duplicate improvement lines found');
+            }
+            
+            // Test different filter combinations
+            const testFilters = [
+                { timePeriod: 'thisWeek', status: '' },
+                { timePeriod: 'thisMonth', status: 'confirmed' },
+                { timePeriod: 'lastMonth', status: 'pending' },
+                { timePeriod: 'allTime', status: 'cancelled' }
+            ];
+            
+            testFilters.forEach((filters, index) => {
+                console.log(`Test ${index + 1}:`, filters);
+                const testImprovements = calculateImprovements(filteredData, filters);
+                console.log('Improvements:', testImprovements);
+            });
+            
+            showToast('Improvement test completed - check console', 'info');
+        }
+        
+        // Make test functions available globally for debugging
+        window.testRestrictedMode = testRestrictedMode;
+        window.testImprovements = testImprovements;
 
         // Manual save function
         function manualSave() {
@@ -7329,6 +8997,16 @@
 
             // Get filtered bookings for the current period
             const bookings = getFilteredBookingsForPeriod();
+            // Empty state handling
+            if (!bookings || bookings.length === 0) {
+                // Clear any previous rendered content to avoid confusion, then show overlay
+                container.innerHTML = '';
+                const currentLabel = getCurrentPeriodLabel(getCurrentFilters());
+                ensureEmptyState(container, `No data available for ${currentLabel}.`);
+                return;
+            } else {
+                clearEmptyState(container);
+            }
             
             switch(currentCalendarView) {
                 case 'month':
@@ -7351,7 +9029,6 @@
 
             updateFilterStatusDisplay(filterStatusContainer);
         }
-
         function updateBookingListFilterStatus(widgetId) {
             const filterStatusContainer = document.getElementById(`booking-list-filter-status-${widgetId}`);
             if (!filterStatusContainer) return;
@@ -7410,6 +9087,114 @@
             }
         }
 
+        function updateRevenueFilterStatus(widgetId) {
+            const filterStatusContainer = document.getElementById(`filter-status-${widgetId}`);
+            if (!filterStatusContainer) return;
+
+            const timePeriod = document.getElementById('timePeriodFilter')?.value || '';
+            const status = document.getElementById('statusFilter')?.value || '';
+            
+            let statusItems = [];
+            let hasFilters = false;
+
+            // Check for time period filters
+            if (timePeriod) {
+                hasFilters = true;
+                const periodNames = {
+                    'thisWeek': '📅 This Week',
+                    'thisMonth': '📅 This Month',
+                    'lastMonth': '📅 Last Month',
+                    'jan2025': '📅 Jan 2025',
+                    'feb2025': '📅 Feb 2025',
+                    'mar2025': '📅 Mar 2025',
+                    'apr2025': '📅 Apr 2025',
+                    'may2025': '📅 May 2025',
+                    'jun2025': '📅 Jun 2025',
+                    'jul2025': '📅 Jul 2025',
+                    'aug2025': '📅 Aug 2025',
+                    'sep2025': '📅 Sep 2025',
+                    'oct2025': '📅 Oct 2025',
+                    'nov2025': '📅 Nov 2025',
+                    'dec2025': '📅 Dec 2025'
+                };
+                statusItems.push(`<span class="filter-status-item"><span class="filter-status-icon">📅</span> ${periodNames[timePeriod] || timePeriod}</span>`);
+            }
+
+            // Check for status filters
+            if (status) {
+                hasFilters = true;
+                const statusNames = {
+                    'pending': '⏳ Pending',
+                    'confirmed': '✅ Confirmed',
+                    'cancelled': '❌ Cancelled'
+                };
+                statusItems.push(`<span class="filter-status-item"><span class="filter-status-icon">${status === 'pending' ? '⏳' : status === 'confirmed' ? '✅' : '❌'}</span> ${statusNames[status] || status}</span>`);
+            }
+
+            // Update the filter status display
+            if (hasFilters) {
+                filterStatusContainer.innerHTML = `<span class="filter-status-icon">🔍</span> Showing: ${statusItems.join(', ')}`;
+                filterStatusContainer.classList.add('has-filters');
+            } else {
+                filterStatusContainer.innerHTML = '<span class="filter-status-icon">💰</span> Showing all revenue data';
+                filterStatusContainer.classList.remove('has-filters');
+            }
+        }
+
+        function updateServicesFilterStatus(widgetId) {
+            const filterStatusContainer = document.getElementById(`filter-status-${widgetId}`);
+            if (!filterStatusContainer) return;
+
+            const timePeriod = document.getElementById('timePeriodFilter')?.value || '';
+            const status = document.getElementById('statusFilter')?.value || '';
+            
+            let statusItems = [];
+            let hasFilters = false;
+
+            // Check for time period filters
+            if (timePeriod) {
+                hasFilters = true;
+                const periodNames = {
+                    'thisWeek': '📅 This Week',
+                    'thisMonth': '📅 This Month',
+                    'lastMonth': '📅 Last Month',
+                    'jan2025': '📅 Jan 2025',
+                    'feb2025': '📅 Feb 2025',
+                    'mar2025': '📅 Mar 2025',
+                    'apr2025': '📅 Apr 2025',
+                    'may2025': '📅 May 2025',
+                    'jun2025': '📅 Jun 2025',
+                    'jul2025': '📅 Jul 2025',
+                    'aug2025': '📅 Aug 2025',
+                    'sep2025': '📅 Sep 2025',
+                    'oct2025': '📅 Oct 2025',
+                    'nov2025': '📅 Nov 2025',
+                    'dec2025': '📅 Dec 2025'
+                };
+                statusItems.push(`<span class="filter-status-item"><span class="filter-status-icon">📅</span> ${periodNames[timePeriod] || timePeriod}</span>`);
+            }
+
+            // Check for status filters
+            if (status) {
+                hasFilters = true;
+                const statusNames = {
+                    'pending': '⏳ Pending',
+                    'confirmed': '✅ Confirmed',
+                    'cancelled': '❌ Cancelled'
+                };
+                statusItems.push(`<span class="filter-status-item"><span class="filter-status-icon">${status === 'pending' ? '⏳' : status === 'confirmed' ? '✅' : '❌'}</span> ${statusNames[status] || status}</span>`);
+            }
+
+            // Update the filter status display
+            if (hasFilters) {
+                filterStatusContainer.innerHTML = `<span class="filter-status-icon">🔍</span> Showing: ${statusItems.join(', ')}`;
+                filterStatusContainer.classList.add('has-filters');
+            } else {
+                filterStatusContainer.innerHTML = '<span class="filter-status-icon">🥧</span> Showing all service data';
+                filterStatusContainer.classList.remove('has-filters');
+            }
+        }
+
         function refreshAllBookingListWidgets() {
             // Find all booking list widgets and refresh their content and filter status
             document.querySelectorAll('.widget').forEach(widget => {
@@ -7424,11 +9209,20 @@
                 }
             });
             
-            // Also refresh the main All Bookings widget in full view
-            const allBookingsContainer = document.getElementById('allBookingsTable');
-            if (allBookingsContainer) {
-                renderBookingsTable();
-                updateBookingListFilterStatus('all-bookings');
+            // Also refresh the main Bookings widget in full view
+            const bookingsWidget = document.querySelector('#widget-bookings, [id*="bookings"]');
+            if (bookingsWidget) {
+                const tableContainer = document.querySelector('#table-widget-bookings, [id*="table-"][id*="bookings"]');
+                if (tableContainer) {
+                    const currentMode = tableContainer.dataset.mode || 'large';
+                    createUnifiedBookingTable(tableContainer, bookingsWidget.id || 'widget-bookings', currentMode);
+                    updateBookingListFilterStatus(bookingsWidget.id || 'widget-bookings');
+                }
+            }
+            
+            // Apply Restricted Mode after refresh
+            if (restrictedMode) {
+                enableRestrictedMode();
             }
         }
 
@@ -7744,12 +9538,13 @@
             
             // Populate modal
             document.getElementById('booking-customer-name').textContent = booking.customerName;
-            document.getElementById('booking-phone').textContent = booking.phone;
-            document.getElementById('booking-email').textContent = booking.email;
+            const mask = restrictedMode;
+            document.getElementById('booking-phone').textContent = mask ? '•••• •••• ••••' : booking.phone;
+            document.getElementById('booking-email').textContent = mask ? '••••••••@•••••••' : booking.email;
             document.getElementById('booking-date').textContent = booking.date;
             document.getElementById('booking-time').textContent = booking.time;
             document.getElementById('booking-car').textContent = booking.carDetails;
-            document.getElementById('booking-notes').textContent = booking.notes || 'No notes';
+            document.getElementById('booking-notes').textContent = mask ? 'Hidden while Restricted Mode is active' : (booking.notes || 'No notes');
             
             // Update status badge
             const statusBadge = document.getElementById('booking-status');
@@ -7763,9 +9558,31 @@
                 const serviceName = dashboardData.settings.serviceTypes[serviceId]?.name || serviceId;
                 const serviceTag = document.createElement('span');
                 serviceTag.className = 'service-tag';
+                if (restrictedMode && /\$/.test(serviceName)) {
+                    serviceTag.textContent = '••••';
+                } else {
                 serviceTag.textContent = serviceName;
+                }
                 servicesContainer.appendChild(serviceTag);
             });
+            
+            // If restricted, display a lock note inside the modal
+            const modalBody = document.querySelector('#bookingDetailsModal .modal-body');
+            if (modalBody) {
+                let note = modalBody.querySelector('.restricted-note');
+                if (restrictedMode) {
+                    if (!note) {
+                        note = document.createElement('div');
+                        note.className = 'restricted-note';
+                        note.style.marginTop = '0.5rem';
+                        note.style.color = 'var(--text-secondary)';
+                        note.innerHTML = '🔒 Sensitive details are hidden. Enter the password to view.';
+                        modalBody.appendChild(note);
+                    }
+                } else if (note) {
+                    note.remove();
+                }
+            }
             
             // Show/hide action buttons based on current status
             const cancelBtn = document.getElementById('cancelBookingBtn');
@@ -7898,5 +9715,3 @@
     </script>
 </body>
 </html>
-
-
